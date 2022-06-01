@@ -1,0 +1,5 @@
+boto3==1.22.7
+botocore==1.25.7
+pytest==7.1.2
+python-dotenv==0.20.0
+SQLAlchemy==1.4.36
