@@ -154,3 +154,8 @@ cython_debug/
 # logs
 !logs
 logs/*.log
+
+# images
+*.png
+*.jpg
+*.jpeg
