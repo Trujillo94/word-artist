@@ -3,16 +3,27 @@ import shutil
 
 
 def clear_directory(path):
+	remove_directory(path, ignore_errors=True)
+	create_directory(path, ignore_errors=True)
+
+
+def create_directory(path, ignore_errors=False):
 	try:
-		cmd1 = f'rm -r {path}'
-		os.system(cmd1)
-	except:
-		pass
+		cmd = f'mkdir {path}'
+		os.system(cmd)
+	except Exception as e:
+		if not ignore_errors:
+			raise e
+
+
+
+def remove_directory(path, ignore_errors=False):
 	try:
-		cmd2 = f'mkdir {path}'
-		os.system(cmd2)
-	except:
-		pass
+		cmd = f'rm -r {path}'
+		os.system(cmd)
+	except Exception as e:
+		if not ignore_errors:
+			raise e
 
 
 def get_extension(filepath):
@@ -52,6 +63,7 @@ def is_image(filepath):
 		return img.format.lower() in ['jpeg', 'jpg', 'png', 'tiff', 'gif']
 	except:
 		return False
+
 
 def is_video(filepath):
 	ext = get_extension(filepath)

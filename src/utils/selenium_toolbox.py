@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from src.utils.files_management_toolbox import (append_suffix_to_filename,
-												clear_directory)
+												clear_directory, create_directory)
 from src.utils.string_toolbox import convert_to_kebab_case, get_class_name
 
 
@@ -119,7 +119,9 @@ class AbstractSeleniumCrawler:
 		self.url = self._url
 		if base_dir is None:
 			timestamp = self._get_timestamp()
-			base_dir = f'{gettempdir()}/{convert_to_kebab_case(get_class_name(self))}/{timestamp}'
+			parent_dir = f'{gettempdir()}/{convert_to_kebab_case(get_class_name(self))}'
+			create_directory(parent_dir)
+			base_dir = f'{parent_dir}/{timestamp}'
 		clear_directory(base_dir)
 		self._base_dir = base_dir
 
@@ -213,7 +215,7 @@ class AbstractSeleniumCrawler:
 		base_dir = self._base_dir
 		old_filename = os.path.basename(old_filepath)
 		new_filename = self._get_new_filename(old_filename)
-		new_filepath = f'{base_dir}/{new_filename}.png'
+		new_filepath = f'{base_dir}/{new_filename}'
 		return new_filepath
 
 	def _get_new_filename(self, old_filepath):
