@@ -3,7 +3,7 @@ from main import handler
 
 def test_main():
     event = {
-        "text": "Hello World",
+        "text": "Kikusss",
         "style": None
     }
     handler(event, {})

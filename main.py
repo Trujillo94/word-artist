@@ -1,6 +1,6 @@
 import logging
 
-from src.word_artist import WordArtist
+from src.slack_word_artist import SlackWordArtist
 
 logger = logging.getLogger("main")
 
@@ -8,8 +8,9 @@ logger = logging.getLogger("main")
 def handler(event, context):
 	text = event['text']
 	style = event['style']
-	WordArtist().compute(text, style=style)
+	response = SlackWordArtist().compute(text, style=style)
 	logger.info("Successful execution")
+	return response
 
 
 if __name__ == "__main__":
