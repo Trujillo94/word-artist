@@ -14,7 +14,7 @@ class MakeArtWordCrawler(AbstractSeleniumCrawler):
                 'green-marble', 'marble-slab', 'gray-block', 'up', 'red-blue', 'aqua', 'italic-outline']
 
     # Public:
-    def compute(self, text, style=None):
+    def compute(self, text: str, style: str | None = None):
         check_type(text, str)
         check_type(style, [str, None])
         self.__text = text
@@ -30,8 +30,8 @@ class MakeArtWordCrawler(AbstractSeleniumCrawler):
         return filepath
 
     # Protected:
-    def _get_new_filename(self, old_filepath):
-        ext = get_extension(old_filepath).replace('.','')
+    def _get_new_filename(self, old_filepath: str):
+        ext = get_extension(old_filepath).replace('.', '')
         text = self.__text
         style = self.__style
         new_filename = f'{convert_to_kebab_case(text)}_{convert_to_kebab_case(style)}.{ext}'
