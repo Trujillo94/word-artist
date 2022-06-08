@@ -10,7 +10,7 @@ jobs:
       FUNCTION_NAME: word-artist-prod
     steps:
       - name: Build Image
-        run: docker build -t ${{ env.FUNCTION_NAME }} ./Dockerfile
+        run: docker build -t ${{ env.FUNCTION_NAME }} -f ./Dockerfile
       - name: Push Image to Amazon ECR
         uses: jwalton/gh-ecr-push@v1.3.5
         with:
