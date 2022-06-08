@@ -7,10 +7,10 @@ from src.utils.list_toolbox import (create_list_from_elements_count,
                                     remove_nones)
 from src.utils.tuples_list_toolbox import filter_column, get_column_as_list
 from src.utils.txt_toolbox import load_text
-from text_to_num import alpha2digit
+from text_to_num.transforms import alpha2digit
 
 
-def get_first_element_from_list_matching_regexs(ls, regexs, ignore_case=False, whole_word=False):
+def get_first_element_from_list_matching_regexs(ls: list[str], regexs: list[str], ignore_case: bool = False, whole_word: bool = False):
     try:
         return next(s for s in ls if matches_any_regex(s, regexs, ignore_case=ignore_case, whole_word=whole_word))
     except StopIteration as e:
@@ -19,54 +19,54 @@ def get_first_element_from_list_matching_regexs(ls, regexs, ignore_case=False, w
         raise e
 
 
-def remove_elements_from_list_matching_regexs(ls, regexs, ignore_case=False, whole_word=False):
-    def f(s): return not matches_any_regex(
+def remove_elements_from_list_matching_regexs(ls: list[str], regexs: list[str], ignore_case: bool = False, whole_word: bool = False):
+    def f(s: str): return not matches_any_regex(
         s, regexs, ignore_case=ignore_case, whole_word=whole_word)
     return list(filter(f, ls))
 
 
-def remove_elements_from_tuples_list_matching_regexs(ls, i, regexs, ignore_case=False, whole_word=False):
-    def f(s): return not matches_any_regex(
+def remove_elements_from_tuples_list_matching_regexs(ls: list[tuple[str]], i: int, regexs: list[str], ignore_case: bool = False, whole_word: bool = False):
+    def f(s: str): return not matches_any_regex(
         s, regexs, ignore_case=ignore_case, whole_word=whole_word)
     return filter_column(ls, i, f)
 
 
-def remove_elements_from_list_not_matching_regexs(ls, regexs, ignore_case=False, whole_word=False):
-    def f(s): return matches_any_regex(
+def remove_elements_from_list_not_matching_regexs(ls: list[str], regexs: list[str], ignore_case: bool = False, whole_word: bool = False):
+    def f(s: str): return matches_any_regex(
         s, regexs, ignore_case=ignore_case, whole_word=whole_word)
     return list(filter(f, ls))
 
 
-def remove_elements_from_tuples_list_not_matching_regexs(ls, i, regexs, ignore_case=False, whole_word=False):
-    def f(s): return matches_any_regex(
+def remove_elements_from_tuples_list_not_matching_regexs(ls: list[tuple[str]], i: int, regexs: list[str], ignore_case: bool = False, whole_word: bool = False):
+    def f(s: str): return matches_any_regex(
         s, regexs, ignore_case=ignore_case, whole_word=whole_word)
     return filter_column(ls, i, f)
 
 
-def remove_terms_not_in_text(text, terms, ignore_case=False):
-    return list(filter(lambda term: contains_regex(text, make_literal(term.replace(' ', '\s')), ignore_case=ignore_case), terms))
+def remove_terms_not_in_text(text, terms, ignore_case: bool = False):
+    return list(filter(lambda term: contains_regex(text, make_literal(term.replace(' ', '\\s')), ignore_case=ignore_case), terms))
 
 
-def list_terms_matches(text, terms, ignore_case=False):
+def list_terms_matches(text, terms, ignore_case: bool = False):
     terms_count = count_terms_matches(text, terms, ignore_case=ignore_case)
     ls = create_list_from_elements_count(terms_count)
     return ls
 
 
-def count_terms_matches(text, terms, ignore_case=False):
+def count_terms_matches(text, terms, ignore_case: bool = False):
     terms_count = []
     for term in terms:
         n = count_matches(text, make_literal(
-            term.replace(' ', '\s')), ignore_case=ignore_case)
+            term.replace(' ', '\\s')), ignore_case=ignore_case)
         terms_count.append((term, n))
     return terms_count
 
 
-def count_matches(s, regexs, ignore_case=False):
+def count_matches(s, regexs, ignore_case: bool = False):
     return len(get_all_matches(s, regexs, ignore_case=ignore_case))
 
 
-def get_all_matches(s, regexs, ignore_case=False):
+def get_all_matches(s, regexs, ignore_case: bool = False):
     if ignore_case:
         flags = re.MULTILINE | re.IGNORECASE
     else:
@@ -79,18 +79,18 @@ def get_all_matches(s, regexs, ignore_case=False):
     return matches
 
 
-def get_lines_indices_containing_literal(s, literal, ignore_case=False, whole_word=False):
+def get_lines_indices_containing_literal(s, literal, ignore_case: bool = False, whole_word: bool = False):
     matches = get_lines_containing_literal(
         s, literal, ignore_case=ignore_case, whole_word=whole_word, number_lines=True)
     return [t[0] for t in matches]
 
 
-def get_lines_containing_literal(s, literal, ignore_case=False, whole_word=False, number_lines=False):
+def get_lines_containing_literal(s, literal, ignore_case: bool = False, whole_word: bool = False, number_lines: bool = False):
     literal = make_literal(literal)
     return get_lines_containing_regex(s, literal, ignore_case=ignore_case, whole_word=whole_word, number_lines=number_lines)
 
 
-def get_lines_containing_regex(s, regexs, ignore_case=False, whole_word=False, number_lines=False):
+def get_lines_containing_regex(s, regexs, ignore_case: bool = False, whole_word: bool = False, number_lines: bool = False):
     if ignore_case:
         flags = re.MULTILINE | re.IGNORECASE
     else:
@@ -113,7 +113,7 @@ def get_lines_from_indices(s, indices):
     return get_elements_by_indices(lines, indices)
 
 
-def get_all_lines_matching_regexs(s, regexs, ignore_case=False):
+def get_all_lines_matching_regexs(s, regexs, ignore_case: bool = False):
     if type(regexs) is str:
         regexs = [regexs]
     matches = []
@@ -125,7 +125,7 @@ def get_all_lines_matching_regexs(s, regexs, ignore_case=False):
     return matches
 
 
-def remove_all_lines_matching_regexs(s, regexs, ignore_case=False):
+def remove_all_lines_matching_regexs(s, regexs, ignore_case: bool = False):
     if type(regexs) is str:
         regexs = [regexs]
     lines = s.splitlines()
@@ -134,7 +134,7 @@ def remove_all_lines_matching_regexs(s, regexs, ignore_case=False):
     return '\n'.join(not_matching_lines)
 
 
-def add_to_regexs(s, regexA, regexB, ignore_case=False):
+def add_to_regexs(s, regexA, regexB, ignore_case: bool = False):
     blocks = SequenceMatcher(None, regexA, regexB).get_matching_blocks()
     if len(blocks) > 1:
         a, b, _ = blocks[1]
@@ -151,7 +151,7 @@ def add_to_regexs(s, regexA, regexB, ignore_case=False):
     return s
 
 
-def matches_any_regex(s, regexs, ignore_case=False, whole_word=False):
+def matches_any_regex(s, regexs, ignore_case: bool = False, whole_word: bool = False):
     if type(regexs) is str:
         regexs = [regexs]
     for regex in regexs:
@@ -160,7 +160,7 @@ def matches_any_regex(s, regexs, ignore_case=False, whole_word=False):
     return False
 
 
-def extract_fragment_full(s, regex0, regex1, include_opening_match=True, include_closing_match=False, ignore_case=False, whole_word=False):
+def extract_fragment_full(s, regex0, regex1, include_opening_match=True, include_closing_match: bool = False, ignore_case: bool = False, whole_word: bool = False):
     _, i0, match0 = get_from_match_full(s, regex0, ignore_case=ignore_case,
                                         whole_word=whole_word, include_match=include_opening_match)
     i = i0+len(match0)
@@ -173,7 +173,7 @@ def extract_fragment_full(s, regex0, regex1, include_opening_match=True, include
     return s[i0:i1], i0, i1
 
 
-def get_from_match_full(s, regex, ignore_case=False, whole_word=False, include_match=True):
+def get_from_match_full(s, regex, ignore_case: bool = False, whole_word: bool = False, include_match=True):
     _, i0, i1 = find_match_full(
         s, regex, ignore_case=ignore_case, whole_word=whole_word)
     if include_match:
@@ -186,7 +186,7 @@ def get_from_match_full(s, regex, ignore_case=False, whole_word=False, include_m
         return '', -1, ''
 
 
-def get_until_match_full(s, regex, ignore_case=False, whole_word=False, include_match=False):
+def get_until_match_full(s, regex, ignore_case: bool = False, whole_word: bool = False, include_match: bool = False):
     _, i0, i1 = find_match_full(
         s, regex, ignore_case=ignore_case, whole_word=whole_word)
     if include_match:
@@ -199,25 +199,25 @@ def get_until_match_full(s, regex, ignore_case=False, whole_word=False, include_
         return s, -1, ''
 
 
-def extract_fragment(s, regex0, regex1, include_opening_match=True, include_closing_match=False, ignore_case=False, whole_word=False):
+def extract_fragment(s, regex0, regex1, include_opening_match=True, include_closing_match: bool = False, ignore_case: bool = False, whole_word: bool = False):
     s, _, _ = extract_fragment_full(s, regex0, regex1, include_opening_match=include_opening_match,
                                     include_closing_match=include_closing_match, ignore_case=ignore_case, whole_word=whole_word)
     return s
 
 
-def get_from_match(s, regex, ignore_case=False, whole_word=False, include_match=True):
+def get_from_match(s, regex, ignore_case: bool = False, whole_word: bool = False, include_match=True):
     s, _, _ = get_from_match_full(s, regex, ignore_case=ignore_case,
                                   whole_word=whole_word, include_match=include_match)
     return s
 
 
-def get_until_match(s, regex, ignore_case=False, whole_word=False, include_match=True):
+def get_until_match(s, regex, ignore_case: bool = False, whole_word: bool = False, include_match=True):
     s, _, _ = get_until_match_full(
         s, regex, ignore_case=ignore_case, whole_word=whole_word, include_match=include_match)
     return s
 
 
-def contains_regex(s, regex, ignore_case=False, whole_word=False):
+def contains_regex(s, regex, ignore_case: bool = False, whole_word: bool = False):
     match, _, _ = find_match_full(
         s, regex, ignore_case=ignore_case, whole_word=whole_word)
     if match is not None:
@@ -226,7 +226,7 @@ def contains_regex(s, regex, ignore_case=False, whole_word=False):
         return False
 
 
-def find_match(s, regexs, ignore_case=False):
+def find_match(s, regexs, ignore_case: bool = False):
     if type(s) is not str:
         raise TypeError(
             f'Invalid type {type(s)} for input argument. Must be a string.')
@@ -245,7 +245,7 @@ def find_match(s, regexs, ignore_case=False):
     return match
 
 
-def find_match_full(s, regexs, ignore_case=False, whole_word=False, i_start=0, i_end=-1):
+def find_match_full(s, regexs, ignore_case: bool = False, whole_word: bool = False, i_start=0, i_end=-1):
     if type(s) is not str:
         raise TypeError(
             f'Invalid type {type(s)} for input argument. Must be a string.')
@@ -264,7 +264,7 @@ def find_match_full(s, regexs, ignore_case=False, whole_word=False, i_start=0, i
     return match, i0, i1
 
 
-def find_full_regex_match(s, regex, ignore_case=False, whole_word=False, i_start=0, i_end=-1):
+def find_full_regex_match(s, regex, ignore_case: bool = False, whole_word: bool = False, i_start=0, i_end=-1):
     if ignore_case:
         flags = re.MULTILINE | re.IGNORECASE
     else:
@@ -295,7 +295,7 @@ def find_full_regex_match(s, regex, ignore_case=False, whole_word=False, i_start
     return match, i0, i1
 
 
-def get_first_match_index(s, regexs, ignore_case=False, i_start=0, i_end=-1):
+def get_first_match_index(s, regexs, ignore_case: bool = False, i_start=0, i_end=-1):
     if type(regexs) is str:
         regexs = [regexs]
     index = -1
@@ -307,7 +307,7 @@ def get_first_match_index(s, regexs, ignore_case=False, i_start=0, i_end=-1):
     return index
 
 
-def get_first_match_last_index(s, regexs, ignore_case=False, i_start=0, i_end=-1):
+def get_first_match_last_index(s, regexs, ignore_case: bool = False, i_start=0, i_end=-1):
     if type(regexs) is str:
         regexs = [regexs]
     index = -1
@@ -319,18 +319,18 @@ def get_first_match_last_index(s, regexs, ignore_case=False, i_start=0, i_end=-1
     return index
 
 
-def get_first_number(s):
+def get_first_number(s: str):
     number = find_match(s, '\\d+')
     return number
 
 
-def get_first_number_full(s):
+def get_first_number_full(s: str):
     number, i0, i1 = find_match_full(s, '\\d+')
     return number, i0, i1
 
 
-def get_first_roman_number_full(s):
-    number, i0, i1 = find_match_full(s, ' (I|V|X|L|C|D|M)+(\s|\n|$)?')
+def get_first_roman_number_full(s: str):
+    number, i0, i1 = find_match_full(s, ' (I|V|X|L|C|D|M)+(\\s|\n|$)?')
     if number is not None:
         while not (number.startswith('I') or number.startswith('V') or number.startswith('X') or number.startswith('L') or number.startswith('C') or number.startswith('D') or number.startswith('M')):
             number = number[1:]
@@ -341,7 +341,7 @@ def get_first_roman_number_full(s):
     return number, i0, i1
 
 
-def get_first_spanish_ordinal_full(s):
+def get_first_spanish_ordinal_full(s: str):
     numerals_filepath = 'src/config/tags/numerals/spanishOrdinalsShort.txt'
     regexs = load_text(numerals_filepath).splitlines()
     regex = merge_regexs(regexs)
@@ -349,7 +349,7 @@ def get_first_spanish_ordinal_full(s):
     return number, i0, i1
 
 
-def get_first_number_extended(s):
+def get_first_number_extended(s: str):
     number = None
     index = 1e10
     decimal = get_first_number_full(s)
@@ -396,20 +396,20 @@ def just_numerals(s, language='en'):
             f'Invalid type <{type(s)}> for input argument <s>. Valid types are: <str>, <int> and <float>.')
 
 
-def has_number(s):
+def has_number(s: str):
     return find_match(s, r'\d') is not None
 
 
-def is_number(s):
+def is_number(s: str):
     return s.isnumeric()
 
 
-def get_first_word(s):
+def get_first_word(s: str):
     word = find_match(s, '\\w+')
     return word
 
 
-def get_first_date(s):
+def get_first_date(s: str):
     regexs = [
         '\\d+ de (enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)( (de|del|del año) \\d{4})?',
         '\\d+(\\.|/|-)\\d+(\\.|/|-)\\d{4}'
@@ -418,14 +418,14 @@ def get_first_date(s):
     return date
 
 
-def find_all_matches(s, regexs, ignore_case=False, whole_word=False):
+def find_all_matches(s, regexs, ignore_case: bool = False, whole_word: bool = False):
     matches_full = find_all_matches_full(
         s, regexs, ignore_case=ignore_case, whole_word=whole_word)
     matches = get_column_as_list(matches_full, 0)
     return matches
 
 
-def find_all_matches_full(s, regexs, ignore_case=False, whole_word=False):
+def find_all_matches_full(s, regexs, ignore_case: bool = False, whole_word: bool = False):
     if type(regexs) is str:
         regexs = [regexs]
     matches_full = []
@@ -446,13 +446,13 @@ def find_all_matches_full(s, regexs, ignore_case=False, whole_word=False):
     return matches_full
 
 
-def find_all_unique_matches(s, regexs, ignore_case=False):
+def find_all_unique_matches(s, regexs, ignore_case: bool = False):
     matches = find_all_matches(s, regexs, ignore_case=ignore_case)
     matches = list(set(matches))
     return matches
 
 
-def find_last_match_full_forward_strategy(s, regexs, ignore_case=True, whole_word=False):
+def find_last_match_full_forward_strategy(s, regexs, ignore_case=True, whole_word: bool = False):
     match_full = (None, -1, -1)
     matches_full = find_all_matches_full(
         s, regexs, ignore_case=ignore_case, whole_word=whole_word)
@@ -461,7 +461,7 @@ def find_last_match_full_forward_strategy(s, regexs, ignore_case=True, whole_wor
     return match_full
 
 
-def find_last_match_full_backwards_strategy(s, regexs, step_size=1, ignore_case=True, whole_word=False):
+def find_last_match_full_backwards_strategy(s, regexs, step_size=1, ignore_case=True, whole_word: bool = False):
     match, i0, i1 = None, -1, -1
     i = len(s)
     while i > 0:
@@ -476,7 +476,7 @@ def find_last_match_full_backwards_strategy(s, regexs, step_size=1, ignore_case=
     return match, i0, i1
 
 
-def find_last_match_full(s, regexs, ignore_case=True, whole_word=False, step_size=20, strategy='backwards'):
+def find_last_match_full(s, regexs, ignore_case=True, whole_word: bool = False, step_size=20, strategy='backwards'):
     if strategy == 'forward':
         return find_last_match_full_forward_strategy(
             s, regexs, ignore_case=ignore_case, whole_word=whole_word)
@@ -489,14 +489,14 @@ def find_last_match_full(s, regexs, ignore_case=True, whole_word=False, step_siz
 
 
 def find_last_separator_index(s, strategy='backwards', step_size=20):
-    regexs = ['(\s|\\.|,|;|:)']
+    regexs = ['(\\s|\\.|,|;|:)']
     _, i0, _ = find_last_match_full(
         s, regexs, strategy=strategy, step_size=step_size, ignore_case=True, whole_word=False)
     return i0
 
 
 def find_last_whitespace_index(s, strategy='backwards', step_size=20):
-    regexs = ['\s']
+    regexs = ['\\s']
     _, i0, _ = find_last_match_full(
         s, regexs, strategy=strategy, step_size=step_size, ignore_case=True, whole_word=False)
     return i0
@@ -528,7 +528,7 @@ def replace_mantaining_case(s, regex, replacement):
     return s
 
 
-def replace_pattern_in_regex(s, regexs, pattern_regex, replacement, replace_all=True, ignore_case=False, whole_word=False):
+def replace_pattern_in_regex(s, regexs, pattern_regex, replacement, replace_all=True, ignore_case: bool = False, whole_word: bool = False):
     matches = find_all_matches(
         s, regexs, ignore_case=ignore_case, whole_word=whole_word)
     for match in matches:
@@ -540,7 +540,7 @@ def replace_pattern_in_regex(s, regexs, pattern_regex, replacement, replace_all=
     return s
 
 
-def replace_regex(s, regexs, replacement, replace_all=False, ignore_case=False, whole_word=False, i_start=0, i_end=-1):
+def replace_regex(s, regexs, replacement, replace_all: bool = False, ignore_case: bool = False, whole_word: bool = False, i_start=0, i_end=-1):
     while True:
         match, i0, i1 = find_match_full(
             s, regexs, ignore_case=ignore_case, whole_word=whole_word, i_start=i_start, i_end=i_end)
@@ -564,12 +564,12 @@ def merge_regexs(regexs):
 
 
 def split_by_separators(s: str, additional_separators: list = []):
-    separators = ['\s', ',', '\.', '\n', ';',
-                  ':', '\(', '\)', '\[', '\]', '"', "'"] + additional_separators
+    separators = ['\\s', ',', '\\.', '\n', ';',
+                  ':', '\\(', '\\)', '\\[', '\\]', '"', "'"] + additional_separators
     return re.split(r'|'.join(separators), s)
 
 
-def split_by_regexs(string, regexs, ignore_case=False, whole_word=False):
+def split_by_regexs(string, regexs, ignore_case: bool = False, whole_word: bool = False):
     if type(regexs) is str:
         regexs = [regexs]
     if ignore_case:
@@ -582,31 +582,31 @@ def split_by_regexs(string, regexs, ignore_case=False, whole_word=False):
     return parts
 
 
-def remove_not_listed_characters(s, char_regexs, ignore_case=False):
+def remove_not_listed_characters(s, char_regexs, ignore_case: bool = False):
     return ''.join(filter(lambda c: matches_any_regex(c, char_regexs, ignore_case=ignore_case, whole_word=False), s))
 
 
-def is_separator(char):
+def is_separator(char: str):
     return char in string.punctuation+' '+'\n'
 
 
-def make_literal(regex):
+def make_literal(regex: str):
     regex = make_literals_special_chars(regex)
     regex = make_special_chars_literals(regex)
     return regex
 
 
-def remove_whitespaces(s):
+def remove_whitespaces(s: str):
     return s.replace(' ', '')
 
 
-def break_sql_syntax(s):
+def break_sql_syntax(s: str):
     s = replace_pattern_in_regex(
-        s, '\s+and\s+(\w+|\d+)=', '=', ' ', replace_all=True)
+        s, '\\s+and\\s+(\\w+|\\d+)=', '=', ' ', replace_all=True)
     return s
 
 
-def make_special_chars_literals(regex):
+def make_special_chars_literals(regex: str):
     regex = regex.replace('(', '\\(')
     regex = regex.replace(')', '\\)')
     regex = regex.replace('.', '\\.')
@@ -623,7 +623,7 @@ def make_special_chars_literals(regex):
     return regex
 
 
-def make_literals_special_chars(regex):
+def make_literals_special_chars(regex: str):
     regex = regex.replace('\\(', '(')
     regex = regex.replace('\\)', ')')
     regex = regex.replace('\\.', '.')

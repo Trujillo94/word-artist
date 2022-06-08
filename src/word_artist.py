@@ -5,11 +5,11 @@ from src.utils.vartypes_toolbox import check_type
 class WordArtist:
 
     # Public:
-    def compute(self, text: str, style=None):
+    def compute(self, text: str, style: str | None = None):
         check_type(text, str)
         check_type(style, [str, None])
         img_filepath = self.__download_word_art_by_makeartword(text, style)
         return img_filepath
 
-    def __download_word_art_by_makeartword(self, text, style=None):
+    def __download_word_art_by_makeartword(self, text: str, style: str | None = None):
         return MakeArtWordCrawler().compute(text, style=style)
