@@ -6,8 +6,8 @@ on:
 jobs:
   deploy-containerized-lambda:
     runs-on: ubuntu-latest
-    env:
-      FUNCTION_NAME: word-artist-prod
+    # env:
+    #   FUNCTION_NAME: word-artist-prod
     steps:
       - name: Build Image
         run: docker build -t word-artist-prod .
@@ -21,5 +21,5 @@ jobs:
           local-image: word-artist-prod:latest
 
       - name: Update AWS Lambda Image
-        run: aws lambda update-function-code --region ${{ secrets.AWS_REGION }} --function-name $FUNCTION_NAME --image-uri ${{ secrets.AWS_IMG_URI }}
+        run: aws lambda update-function-code --region ${{ secrets.AWS_REGION }} --function-name word-artist-prod --image-uri ${{ secrets.AWS_IMG_URI }}
 
