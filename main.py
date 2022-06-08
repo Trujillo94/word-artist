@@ -9,6 +9,7 @@ logger = logging.getLogger("main")
 
 def handler(event, context):
     from src.slack_word_artist import SlackWordArtist
+    print(sys.path)
     text = event['text']
     style = event['style']
     response = SlackWordArtist().compute(text, style=style)
