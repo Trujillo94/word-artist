@@ -6,9 +6,10 @@ from tempfile import gettempdir
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 from src.utils.files_management_toolbox import (append_suffix_to_filename,
                                                 clear_directory,
                                                 create_directory)
@@ -23,11 +24,12 @@ def get_selenium_browser(url, waiting_time=10):
         # profile = webdriver.FirefoxProfile()
         # profile.set_preference("http.response.timeout", 600)
         # driver = webdriver.Firefox(firefox_profile=profile)
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--single-process')
-        options.add_argument('--disable-dev-shm-usage')
+        # options = webdriver.ChromeOptions()
+        options = Options()
+        # options.add_argument('--headless')
+        # options.add_argument('--no-sandbox')
+        # options.add_argument('--single-process')
+        # options.add_argument('--disable-dev-shm-usage')
 
         options.add_argument('--ignore-certificate-errors')
         # options.add_argument("--dns-prefetch-disable")
@@ -186,10 +188,6 @@ class AbstractSeleniumCrawler:
             'return document.querySelector("body > downloads-manager").shadowRoot.querySelector("#frb0").shadowRoot.querySelector("#show")')
         filepath = show_in_folder.get_attribute("title")
         return filepath
-
-    def get_last_download_url(self):
-        last_download = self.get_last_download_filepath()
-        return last_download.get_attribute('href')
 
     def get_last_download_url(self):
         driver = self._driver
