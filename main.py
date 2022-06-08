@@ -2,6 +2,7 @@ import logging
 import sys
 
 sys.path.append('.')
+sys.path.append('./')
 
 logger = logging.getLogger("main")
 
