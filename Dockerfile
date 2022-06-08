@@ -1,11 +1,49 @@
-FROM public.ecr.aws/lambda/python:3.9
+# Define function directory
+ARG FUNCTION_DIR="/function"
 
-RUN python3 -m pip install --upgrade pip
+#FROM 082206641446.dkr.ecr.eu-west-3.amazonaws.com/winnow-video-converter-setup:latest
+FROM python:3.10-slim
 
-WORKDIR ${LAMBDA_TASK_ROOT}
-COPY . ./
+# Install aws-lambda-cpp build dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    build-essential \
+    # libpoppler-cpp-dev \
+    pkg-config \
+    python-dev \
+    g++ \
+    make \
+    cmake \
+    # unzip \
+    # ffmpeg \
+    libcurl4-openssl-dev
 
-RUN pip3 install -r requirements.txt
-RUN pip3 install awscli
+# Include global arg in this stage of the build
+ARG FUNCTION_DIR
+# Create function directory
+RUN mkdir -p ${FUNCTION_DIR}
 
-CMD ["main.handler"]
+# Copy function code
+COPY . ${FUNCTION_DIR}
+
+# Install the runtime interface client
+RUN pip install \
+    --target ${FUNCTION_DIR} \
+    awslambdaric
+
+WORKDIR ${FUNCTION_DIR}
+
+# Install requirements
+RUN pip3 --no-cache-dir install -r requirements.txt
+
+# Copy in the build image dependencies
+# COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
+
+COPY geckodriver /usr/local/bin/
+COPY chromedriver /usr/local/bin/
+
+ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
+COPY entry.sh /
+RUN chmod 755 /usr/bin/aws-lambda-rie /entry.sh
+ENTRYPOINT [ "/entry.sh" ]
+CMD [ "main.handler" ]
