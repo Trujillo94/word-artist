@@ -1,4 +1,8 @@
 import logging
+import sys
+
+sys.path.append('.')
+sys.path.append('./')
 
 logging.basicConfig(
     level=logging.INFO,

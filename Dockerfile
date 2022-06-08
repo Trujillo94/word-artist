@@ -16,6 +16,7 @@ RUN apt-get update && \
     cmake \
     # unzip \
     # ffmpeg \
+    xvfb \
     libcurl4-openssl-dev
 
 # Include global arg in this stage of the build
