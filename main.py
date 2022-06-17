@@ -7,7 +7,7 @@ logger = logging.getLogger("main")
 
 def handler(event, context):
     text = event['text']
-    style = event['style']
+    style = event.get('style', None)
     response = SlackWordArtist().compute(text, style=style)
     logger.info("Successful execution")
     return response
@@ -15,7 +15,6 @@ def handler(event, context):
 
 if __name__ == "__main__":
     event = {
-        "text": "Hello World",
-        "style": None
+        "text": "Hello World"
     }
     handler(event, {})
