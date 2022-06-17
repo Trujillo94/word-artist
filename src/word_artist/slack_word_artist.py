@@ -1,4 +1,4 @@
-from src.word_artist import WordArtist
+from src.word_artist.word_artist import WordArtist
 
 
 class SlackWordArtist:
