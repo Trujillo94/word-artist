@@ -161,3 +161,7 @@ logs/*.log
 !media/*
 *.jpg
 *.jpeg
+
+# Terraform
+.terraform.*
+.terraform/*
