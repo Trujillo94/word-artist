@@ -26,6 +26,10 @@ variable "AWS_REGION" {
   type = string
 }
 
+variable "AWS_BUCKET_NAME" {
+  type = string
+}
+
 variable "REPOSITORY_NAME" {
   type      = string
   sensitive = false
@@ -59,6 +63,7 @@ locals {
   ecr_image_tag       = "latest"
 }
 
+# Create a new ECR repository
 resource "aws_ecr_repository" "repo" {
   name = local.ecr_repository_name
 }
@@ -87,6 +92,7 @@ data "aws_ecr_image" "lambda_image" {
   image_tag       = local.ecr_image_tag
 }
 
+# Create a new Lambda function
 resource "aws_iam_role" "lambda" {
   name               = "${local.project_name}-lambda-role"
   assume_role_policy = <<EOF
@@ -156,6 +162,7 @@ resource "aws_lambda_function" "sample_lambda" {
   package_type  = "Image"
 }
 
+# Create an API Gateway REST API
 resource "aws_api_gateway_rest_api" "sample_api" {
   name        = "${local.project_name}-api"
   description = "WordArtist REST API."
@@ -214,18 +221,6 @@ resource "aws_api_gateway_integration_response" "MyDemoIntegrationResponse" {
   resource_id = aws_api_gateway_resource.sample_resource.id
   http_method = aws_api_gateway_method.sample_method.http_method
   status_code = aws_api_gateway_method_response.response_200.status_code
-
-
-  # # Transforms the backend JSON response to XML
-  # response_templates = {
-  #   "application/xml" = <<EOF
-  #     #set($inputRoot = $input.path('$'))
-  #     <?xml version="1.0" encoding="UTF-8"?>
-  #     <message>
-  #         $inputRoot.body
-  #     </message>
-  #     EOF
-  # }
 }
 
 resource "aws_api_gateway_method" "method_root" {
@@ -266,6 +261,19 @@ resource "aws_lambda_permission" "apigw_lambda" {
 
   # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
   source_arn = "${aws_api_gateway_rest_api.sample_api.execution_arn}/*/*"
+}
+
+
+# Create an S3 bucket
+module "s3_bucket" {
+  source = "terraform-aws-modules/s3-bucket/aws"
+
+  bucket = try(var.AWS_BUCKET_NAME, local.project_name)
+  acl    = "private"
+
+  versioning = {
+    enabled = false
+  }
 
 }
 
