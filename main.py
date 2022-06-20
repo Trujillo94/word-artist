@@ -6,8 +6,10 @@ logger = logging.getLogger("main")
 
 
 def handler(event, context):
+    print('jodeeeeeeeeeeeeeeeer')
     text = event['text']
     style = event.get('style', None)
+    print(text)
     img_url = SlackWordArtist().compute(text, style=style)
     logger.info("Successful execution")
     return img_url
