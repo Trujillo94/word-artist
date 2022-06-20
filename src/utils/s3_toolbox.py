@@ -24,9 +24,9 @@ def upload(local_route: str, bucket_route: str, extra_args={}):
     except S3UploadFailedError as e:
         raise S3UploadFailedError(
             f'{e}. ACCESS_KEY_ID: {ACCESS_KEY_ID}') from e
-    region = boto3.client('s3').get_bucket_location(
-        Bucket=BUCKET_NAME)['LocationConstraint']
-    object_url = f"https://s3-{region}.amazonaws.com/{BUCKET_NAME}/{bucket_route}"
+    # region = boto3.client('s3').get_bucket_location(
+    #     Bucket=BUCKET_NAME)['LocationConstraint']
+    object_url = f"https://s3-{DEFAULT_REGION}.amazonaws.com/{BUCKET_NAME}/{bucket_route}"
     return object_url
 
 
