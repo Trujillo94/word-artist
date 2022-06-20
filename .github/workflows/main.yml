@@ -111,7 +111,7 @@ jobs:
         run: |
           export TF_VAR_deployed_at=$(date +%s)
           if [[ -n ${{ secrets.AWS_ECR_REPO }} ]]; then ECR_REPO_NAME=${{ secrets.AWS_ECR_REPO }}; else ECR_REPO_NAME=${{ github.event.repository.name }}; fi
-          if [[ -n ${{ secrets.AWS_BUCKET_NAME }} ]]; then ECR_REPO_NAME=${{ secrets.AWS_BUCKET_NAME }}; else ECR_REPO_NAME=${{ github.event.repository.name }}; fi
+          if [[ -n ${{ secrets.AWS_BUCKET_NAME }} ]]; then BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}; else BUCKET_NAME=${{ github.event.repository.name }}; fi
           terraform plan -var=REPOSITORY_NAME=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$ECR_REPO_NAME -var=AWS_BUCKET_NAME=$BUCKET_NAME
 
         # On push to "main", build or change infrastructure according to Terraform configuration files
@@ -121,7 +121,7 @@ jobs:
         run: |
           export TF_VAR_deployed_at=$(date +%s)
           if [[ -n ${{ secrets.AWS_ECR_REPO }} ]]; then ECR_REPO_NAME=${{ secrets.AWS_ECR_REPO }}; else ECR_REPO_NAME=${{ github.event.repository.name }}; fi
-          if [[ -n ${{ secrets.AWS_BUCKET_NAME }} ]]; then ECR_REPO_NAME=${{ secrets.AWS_BUCKET_NAME }}; else ECR_REPO_NAME=${{ github.event.repository.name }}; fi
+          if [[ -n ${{ secrets.AWS_BUCKET_NAME }} ]]; then BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}; else BUCKET_NAME=${{ github.event.repository.name }}; fi
           terraform plan -var=REPOSITORY_NAME=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$ECR_REPO_NAME -var=AWS_BUCKET_NAME=$BUCKET_NAME
 
   removing-images:
