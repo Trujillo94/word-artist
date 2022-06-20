@@ -1,8 +1,8 @@
 import boto3
+from boto3.exceptions import S3UploadFailedError
 from src.config.aws import (ACCESS_KEY_ID, BUCKET_NAME, DEFAULT_REGION,
                             SECRET_ACCESS_KEY)
 from src.utils.dict_toolbox import get_values_from_list_of_dicts_by_key
-from src.utils.toolbox import load_env_var
 
 
 def download(bucket_route: str, local_route: str):
@@ -21,10 +21,9 @@ def upload(local_route: str, bucket_route: str, extra_args={}):
     try:
         client.upload_file(
             local_route, BUCKET_NAME, bucket_route, ExtraArgs=extra_args)
-    except Exception as e:
-        msg = str(e)
-        # !! Typifiy errors here !!
-        raise Exception(msg) from e
+    except S3UploadFailedError as e:
+        raise S3UploadFailedError(
+            f'{e}. ACCESS_KEY_ID: {ACCESS_KEY_ID}') from e
     region = boto3.client('s3').get_bucket_location(
         Bucket=BUCKET_NAME)['LocationConstraint']
     object_url = f"https://s3-{region}.amazonaws.com/{BUCKET_NAME}/{bucket_route}"

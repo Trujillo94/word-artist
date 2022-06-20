@@ -162,6 +162,11 @@ resource "aws_lambda_function" "sample_lambda" {
   timeout       = 30
   image_uri     = "${aws_ecr_repository.repo.repository_url}@${data.aws_ecr_image.lambda_image.id}"
   package_type  = "Image"
+  environment {
+    variables = {
+      AWS_BUCKET_NAME = var.AWS_BUCKET_NAME
+    }
+  }
 }
 
 # Create an API Gateway REST API
