@@ -19,13 +19,16 @@ def download(bucket_route: str, local_route: str):
 def upload(local_route: str, bucket_route: str, extra_args={}):
     client = connect()
     try:
-        response = client.upload_file(
+        client.upload_file(
             local_route, BUCKET_NAME, bucket_route, ExtraArgs=extra_args)
     except Exception as e:
         msg = str(e)
         # !! Typifiy errors here !!
         raise Exception(msg) from e
-    return response
+    region = boto3.client('s3').get_bucket_location(
+        Bucket=BUCKET_NAME)['LocationConstraint']
+    object_url = f"https://s3-{region}.amazonaws.com/{BUCKET_NAME}/{bucket_route}"
+    return object_url
 
 
 def list_objects(prefix: str = '', exact_key: bool = False):

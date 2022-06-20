@@ -15,7 +15,8 @@ class SlackWordArtist:
         img_filepath = 'media/wordartist_scheme.png'
         style = 'mock'
         bucket_route = self.__compute_bucket_route(text, style, img_filepath)
-        img_url = upload(img_filepath, bucket_route)
+        img_url = upload(img_filepath, bucket_route,
+                         extra_args={'ACL': 'public-read'})
         return img_url
 
     def __compute_bucket_route(self, text: str, style: str, filepath: str):
