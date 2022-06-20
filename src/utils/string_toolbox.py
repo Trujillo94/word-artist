@@ -148,8 +148,8 @@ def convert_to_snake_case(s: str):
 
 
 def convert_to_normal_case(s: str):
-    s = ''.join(map(lambda c: f' {c}' if c.isupper()
-                    or c == '-' or c == '_' else c, s))
+    s = ''.join(map(lambda c: f' {c}' if c.isupper() else c, s))
+    s = s.replace('-', ' ').replace('_', ' ')
     s = s.strip()
     s = remove_double_whitespaces(s)
     return s

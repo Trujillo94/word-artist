@@ -10,18 +10,12 @@ from src.utils.vartypes_toolbox import check_type
 class MakeArtWordCrawler(AbstractSeleniumCrawler):
 
     _url = 'https://www.makewordart.com/'
-    __styles = ['blues', 'rainbow', 'superhero', 'outline', 'arc', 'sunset', 'horizon', 'purple',
-                'green-marble', 'marble-slab', 'gray-block', 'up', 'red-blue', 'aqua', 'italic-outline']
 
     # Public:
-    def compute(self, text: str, style: str | None = None):
+    def compute(self, text: str, style: str):
         check_type(text, str)
         check_type(style, [str, None])
         self.__text = text
-        if style is None:
-            style = self.__get_random_style()
-        else:
-            style = convert_to_kebab_case(style)
         self.__style = style
         self.__click_style()
         self.__type_text()
@@ -38,12 +32,6 @@ class MakeArtWordCrawler(AbstractSeleniumCrawler):
         return new_filename
 
     # Private:
-
-    def __get_random_style(self):
-        styles = self.__styles
-        style = choice(styles)
-        return style
-
     def __click_style(self):
         style = self.__style
         styles_div = self.get_element_by_class_name(style)
