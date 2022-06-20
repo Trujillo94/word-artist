@@ -1,5 +1,3 @@
-from random import choice
-
 from selenium.webdriver.common.keys import Keys
 from src.utils.files_management_toolbox import get_extension
 from src.utils.selenium_toolbox import AbstractSeleniumCrawler

@@ -1,4 +1,4 @@
-from secrets import choice
+from random import choice
 
 from src.crawlers.make_word_art_crawler import MakeArtWordCrawler
 from src.utils.string_toolbox import convert_to_kebab_case
