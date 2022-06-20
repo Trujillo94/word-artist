@@ -27,7 +27,9 @@ variable "AWS_REGION" {
 }
 
 variable "AWS_BUCKET_NAME" {
-  type = string
+  type      = string
+  sensitive = false
+  nullable  = false
 }
 
 variable "REPOSITORY_NAME" {
@@ -265,16 +267,16 @@ resource "aws_lambda_permission" "apigw_lambda" {
 
 
 # Create an S3 bucket
-module "s3_bucket" {
-  source = "terraform-aws-modules/s3-bucket/aws"
-
+resource "aws_s3_bucket" "bucket" {
   bucket = try(var.AWS_BUCKET_NAME, local.project_name)
-  acl    = "private"
-
-  versioning = {
+  versioning {
     enabled = false
   }
+}
 
+resource "aws_s3_bucket_acl" "example" {
+  bucket = aws_s3_bucket.bucket.id
+  acl    = "private"
 }
 
 output "lambda_name" {
@@ -285,4 +287,7 @@ output "base_url" {
   value = aws_api_gateway_deployment.apideploy.invoke_url
 }
 
+output "bucket_name" {
+  value = aws_s3_bucket.bucket.id
+}
 
