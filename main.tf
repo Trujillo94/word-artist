@@ -122,6 +122,15 @@ resource "aws_iam_role" "lambda" {
                "Service": "lambda.amazonaws.com"
            },
            "Effect": "Allow"
+       },
+       {
+           "Effect": "Allow",
+           "Action": [
+               "s3:PutObject",
+               "s3:GetObject",
+               "s3:DeleteObject"
+           ],
+           "Resource": ["arn:aws:s3:::${local.bucket_name}/*"]
        }
    ]
 }
@@ -161,15 +170,15 @@ data "aws_iam_policy_document" "lambda" {
     sid       = "CodeCommit"
   }
 
-  statement {
-    actions = [
-      "s3:GetObject",
-      "s3:PutObject"
-    ]
-    effect    = "Allow"
-    resources = ["*"]
-    sid       = "S3"
-  }
+  # statement {
+  #   actions = [
+  #     "s3:GetObject",
+  #     "s3:PutObject"
+  #   ]
+  #   effect    = "Allow"
+  #   resources = ["*"]
+  #   sid       = "S3"
+  # }
 }
 
 resource "aws_iam_policy" "lambda" {
