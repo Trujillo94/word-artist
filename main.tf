@@ -32,13 +32,19 @@ variable "AWS_BUCKET_NAME" {
   nullable  = false
 }
 
-variable "REPOSITORY_NAME" {
+variable "GITHUB_REPO" {
   type      = string
   sensitive = false
   nullable  = false
 }
 
 variable "AWS_ECR_REPO" {
+  type      = string
+  sensitive = false
+  nullable  = true
+}
+
+variable "ENV_TAG" {
   type      = string
   sensitive = false
   nullable  = true
@@ -59,10 +65,11 @@ provider "aws" {
 data "aws_caller_identity" "current" {}
 
 locals {
-  project_name        = var.REPOSITORY_NAME
+  project_name        = var.GITHUB_REPO
   account_id          = data.aws_caller_identity.current.account_id
   ecr_repository_name = try(var.AWS_ECR_REPO, local.project_name)
   ecr_image_tag       = "latest"
+  env_tag             = var.ENV_TAG
 }
 
 # Create a new ECR repository
@@ -157,7 +164,7 @@ resource "aws_lambda_function" "sample_lambda" {
   depends_on = [
     null_resource.ecr_image
   ]
-  function_name = local.project_name
+  function_name = "${local.project_name}-${local.env_tag}"
   role          = aws_iam_role.lambda.arn
   timeout       = 30
   image_uri     = "${aws_ecr_repository.repo.repository_url}@${data.aws_ecr_image.lambda_image.id}"
