@@ -6,7 +6,6 @@ logger = logging.getLogger("main")
 
 
 def handler(event, context):
-    print('jodeeeeeeeeeeeeeeeer')
     text = event['text']
     style = event.get('style', None)
     print(text)
