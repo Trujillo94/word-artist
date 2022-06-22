@@ -122,15 +122,6 @@ resource "aws_iam_role" "lambda" {
                "Service": "lambda.amazonaws.com"
            },
            "Effect": "Allow"
-       },
-       {
-           "Effect": "Allow",
-           "Action": [
-               "s3:PutObject",
-               "s3:GetObject",
-               "s3:DeleteObject"
-           ],
-           "Resource": ["arn:aws:s3:::${local.bucket_name}/*"]
        }
    ]
 }
@@ -182,9 +173,30 @@ data "aws_iam_policy_document" "lambda" {
 }
 
 resource "aws_iam_policy" "lambda" {
-  name   = "${local.lambda_name}-lambda-policy"
-  path   = "/"
-  policy = data.aws_iam_policy_document.lambda.json
+  name = "${local.lambda_name}-lambda-policy"
+  path = "/"
+  # policy = data.aws_iam_policy_document.lambda.json
+  policy = <<-EOF
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": ["s3:ListBucket"],
+                    "Resource": ["arn:aws:s3:::{var.bucket_name}"]
+                },
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:PutObject",
+                        "s3:GetObject",
+                        "s3:DeleteObject"
+                    ],
+                    "Resource": ["arn:aws:s3:::{var.bucket_name}/*"]
+                }
+            ]
+          }
+        EOF
 }
 
 resource "aws_lambda_function" "lambda" {
