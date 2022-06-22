@@ -55,7 +55,7 @@ permissions:
 
 env:
   AWS_DEFAULT_REGION: "${{ secrets.AWS_REGION }}"
-  ECR_REPO: "${{ github.event.repository.name }}"
+  ECR_REPO: "${{ secrets.AWS_ECR_REPO }}"
 
 jobs:
   test:
@@ -180,6 +180,7 @@ jobs:
           AWS_EC2_METADATA_DISABLED: true
       - name: Remove previous ECR images
         run: |
+          if [[ -n ${{ secrets.AWS_ECR_REPO }} ]]; then ECR_REPO=${{ secrets.AWS_ECR_REPO }}; else ECR_REPO=${{ github.event.repository.name }}; fi
           IMAGES_TO_DELETE=$( aws ecr list-images --repository-name $ECR_REPO --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json )
           N_IMAGES=${#IMAGES_TO_DELETE[@]}
           if [[ -n ${{ secrets.N_OLD_IMAGES_TO_KEEP }} ]]; then N_OLD_IMAGES_TO_KEEP=${{ secrets.N_OLD_IMAGES_TO_KEEP }}; else N_OLD_IMAGES_TO_KEEP=0; fi
