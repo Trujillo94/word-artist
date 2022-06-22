@@ -1,11 +1,13 @@
 import sys
-sys.path.append('./')
+
 from main import handler
+
+sys.path.append('./')
 
 
 def test_main():
     event = {
-        "text": "Kikusss",
+        "text": "Is this working",
         "style": None
     }
     handler(event, {})

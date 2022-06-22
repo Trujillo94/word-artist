@@ -40,7 +40,7 @@ class S3Wrapper:
         return s3_object["Body"]
 
     @AWSException.error_handling
-    def upload_file(self, bucket, local_file_name, s3_file_name=None):
+    def upload_file(self, bucket, local_file_name, s3_file_name=None, extra_args={}):
         """
         Uploads a file into S3 to the selected bucket.
 
@@ -50,8 +50,9 @@ class S3Wrapper:
         return: Boto3 response
         """
 
-        s3_client = self.__s3_client.client("s3")
-        response = s3_client.upload_file(local_file_name, bucket, s3_file_name)
+        s3_client = self.__s3_client
+        response = s3_client.upload_file(
+            local_file_name, bucket, s3_file_name, ExtraArgs=extra_args)
         return response
 
     @AWSException.error_handling
