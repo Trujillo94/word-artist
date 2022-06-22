@@ -344,9 +344,7 @@ data "aws_iam_policy_document" "allow_s3_access" {
     }
 
     actions = [
-      "s3:GetObject",
-      "s3:PutObject",
-      "s3:ListBucket"
+      "s3:*"
     ]
 
     resources = [
