@@ -54,7 +54,7 @@ permissions:
   contents: read
 
 env:
-  AWS_REGION: eu-west-3
+  AWS_REGION: "${{ secrets.AWS_REGION }}"
   ECR_REPO: "${{ secrets.AWS_ECR_REPO!='' || github.event.repository.name }}"
 
 jobs:
@@ -81,7 +81,7 @@ jobs:
     env:
       TF_VAR_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       TF_VAR_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      TF_VAR_AWS_REGION: ${{env.AWS_REGION}}
+      TF_VAR_AWS_REGION: eu-west-3
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
@@ -93,7 +93,7 @@ jobs:
           # role-to-assume: arn:aws:iam::123456789100:role/my-github-actions-role
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{env.AWS_REGION}}
+          aws-region: ${{ env.AWS_REGION }}
 
       # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
       - name: Setup Terraform
@@ -143,7 +143,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{env.AWS_REGION}}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
