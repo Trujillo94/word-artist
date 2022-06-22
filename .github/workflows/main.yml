@@ -88,7 +88,8 @@ jobs:
   deploy:
     name: "Deploy"
     needs: [terraform]
-    if: ${{ always() && (!contains(join(needs.*.result, ','), 'failure') && !contains(join(needs.*.result, ','), 'cancelled') && contains(join(needs.*.result, ','), 'success')) }}
+    # if: ${{ always() && (!contains(join(needs.*.result, ','), 'failure') && !contains(join(needs.*.result, ','), 'cancelled') && contains(join(needs.*.result, ','), 'success')) }}
+    if: ${{ 1==0 }}
     runs-on: ubuntu-latest
     environment: production
 
