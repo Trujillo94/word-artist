@@ -55,8 +55,9 @@ permissions:
 
 env:
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-  ECR_REPO: "${{ secrets.AWS_ECR_REPO || github.event.repository.name }}-${{ secrets.ENV_TAG }}"
-  BUCKET_NAME: "${{ secrets.AWS_BUCKET_NAME || github.event.repository.name }}-${{ secrets.ENV_TAG }}"
+  ECR_REPO: "${{ github.event.repository.name }}-${{ secrets.ENV_TAG }}"
+  LAMBDA_FUNCTION: "${{ github.event.repository.name }}-${{ secrets.ENV_TAG }}"
+  BUCKET_NAME: "${{ github.event.repository.name }}-${{ secrets.ENV_TAG }}"
   ENV_TAG: ${{ secrets.ENV_TAG }}
 
 jobs:
@@ -160,6 +161,11 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG"
+
+      - name: Update Lambda's Image
+        id: update-lambda
+        run: |
+          aws lambda update-function-code --region $AWS_DEFAULT_REGION --function-name $LAMBDA_FUNCTION --image-uri $ECR_REPO
 
   removing-images:
     name: "Removing previous ECR images"
