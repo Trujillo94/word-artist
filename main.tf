@@ -183,7 +183,7 @@ resource "aws_iam_policy" "lambda" {
                 {
                     "Effect": "Allow",
                     "Action": ["s3:ListBucket"],
-                    "Resource": ["arn:aws:s3:::{var.bucket_name}"]
+                    "Resource": ["arn:aws:s3:::${local.bucket_name}"]
                 },
                 {
                     "Effect": "Allow",
@@ -192,7 +192,7 @@ resource "aws_iam_policy" "lambda" {
                         "s3:GetObject",
                         "s3:DeleteObject"
                     ],
-                    "Resource": ["arn:aws:s3:::{var.bucket_name}/*"]
+                    "Resource": ["arn:aws:s3:::${local.bucket_name}/*"]
                 }
             ]
           }
