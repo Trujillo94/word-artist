@@ -57,7 +57,7 @@ env:
   ENV: "prod"
   AWS_DEFAULT_REGION: "${{ secrets.AWS_REGION }}"
   ECR_REPO: "${{ secrets.AWS_ECR_REPO }}"
-  BUCKET_NAME: "${{ secrets.AWS_BUCKET_NAME || github.event.repository.name }}"
+  BUCKET_NAME: "${{ secrets.AWS_BUCKET_NAME || github.event.repository.name }}-$ENV"
 
 jobs:
   test:
