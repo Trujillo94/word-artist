@@ -286,7 +286,30 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
-resource "aws_s3_bucket_acl" "example" {
+resource "aws_s3_access_point" "sample_lambda_access_point" {
+  bucket = aws_s3_bucket.bucket.id
+  name   = "sample_bucket"
+}
+
+resource "aws_s3control_object_lambda_access_point" "sample_lambda_access_point" {
+  name = "sample_lambda_access_point"
+
+  configuration {
+    supporting_access_point = aws_s3_access_point.sample_lambda_access_point.arn
+
+    transformation_configuration {
+      actions = ["GetObject", "PutObject"]
+
+      content_transformation {
+        aws_lambda {
+          function_arn = aws_lambda_function.sample_lambda.arn
+        }
+      }
+    }
+  }
+}
+
+resource "aws_s3_bucket_acl" "sample_bucket_acl" {
   bucket = aws_s3_bucket.bucket.id
   acl    = "private"
 }
