@@ -152,6 +152,15 @@ data "aws_iam_policy_document" "lambda" {
     resources = ["*"]
     sid       = "CodeCommit"
   }
+
+  statement {
+    actions = [
+      "s3:*"
+    ]
+    effect    = "Allow"
+    resources = ["*"]
+    sid       = "S3"
+  }
 }
 
 resource "aws_iam_policy" "lambda" {
@@ -280,7 +289,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
 
 # Create an S3 bucket
 resource "aws_s3_bucket" "bucket" {
-  bucket = try(var.AWS_BUCKET_NAME, local.project_name)
+  bucket = try(var.AWS_BUCKET_NAME, "${local.project_name}-${local.env_tag}")
   versioning {
     enabled = false
   }
@@ -291,23 +300,43 @@ resource "aws_s3_access_point" "bucket_lambda_access_point" {
   name   = "${var.AWS_BUCKET_NAME}-lambda"
 }
 
-resource "aws_s3control_object_lambda_access_point" "bucket_lambda_access_point_control_object" {
-  name = "${var.AWS_BUCKET_NAME}-lambda"
+# resource "aws_s3control_access_point_policy" "example" {
+#   access_point_arn = aws_s3_access_point.bucket_lambda_access_point.arn
 
-  configuration {
-    supporting_access_point = aws_s3_access_point.bucket_lambda_access_point.arn
+#   policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [{
+#       Effect = "Allow"
+#       Action = [
+#         "s3:GetObject"
+#       ],
+#       Sid = "s3-object-lambda",
+#       Principal = {
+#         AWS = "*"
+#       }
+#       Resource = "${aws_s3_access_point.bucket_lambda_access_point.arn}/object/*"
+#       # Resource = ["*"]
+#     }]
+#   })
+# }
 
-    transformation_configuration {
-      actions = ["GetObject"]
+# resource "aws_s3control_object_lambda_access_point" "bucket_lambda_access_point_control_object" {
+#   name = "${var.AWS_BUCKET_NAME}-lambda"
 
-      content_transformation {
-        aws_lambda {
-          function_arn = aws_lambda_function.lambda.arn
-        }
-      }
-    }
-  }
-}
+#   configuration {
+#     supporting_access_point = aws_s3_access_point.bucket_lambda_access_point.arn
+
+#     transformation_configuration {
+#       actions = ["PutObject"]
+
+#       content_transformation {
+#         aws_lambda {
+#           function_arn = aws_lambda_function.lambda.arn
+#         }
+#       }
+#     }
+#   }
+# }
 
 resource "aws_s3_bucket_acl" "bucket_acl" {
   bucket = aws_s3_bucket.bucket.id
