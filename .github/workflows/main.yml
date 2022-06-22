@@ -116,7 +116,7 @@ jobs:
       - name: Terraform Plan
         run: |
           export TF_VAR_deployed_at=$(date +%s)
-          terraform plan -var=GITHUB_REPO=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$ECR_REPO -var=AWS_BUCKET_NAME=$BUCKET_NAME -var=ENV_TAG=$ENV_TAG -var=$AWS_LAMBDA_FUNCTION=LAMBDA_FUNCTION
+          terraform plan -var=GITHUB_REPO=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$ECR_REPO -var=AWS_BUCKET_NAME=$BUCKET_NAME -var=ENV_TAG=$ENV_TAG -var=AWS_LAMBDA_FUNCTION=$LAMBDA_FUNCTION
 
         # On push to "main", build or change infrastructure according to Terraform configuration files
         # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
@@ -124,7 +124,7 @@ jobs:
         # if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
         run: |
           export TF_VAR_deployed_at=$(date +%s)
-          terraform apply -auto-approve -var=GITHUB_REPO=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$ECR_REPO  -var=AWS_BUCKET_NAME=$BUCKET_NAME -var=ENV_TAG=$ENV_TAG -var=$AWS_LAMBDA_FUNCTION=LAMBDA_FUNCTION
+          terraform apply -auto-approve -var=GITHUB_REPO=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$ECR_REPO  -var=AWS_BUCKET_NAME=$BUCKET_NAME -var=ENV_TAG=$ENV_TAG -var=AWS_LAMBDA_FUNCTION=$LAMBDA_FUNCTION
 
   deploy:
     name: "Deploy"
