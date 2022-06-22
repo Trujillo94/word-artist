@@ -54,8 +54,8 @@ permissions:
   contents: read
 
 env:
-  AWS_REGION: "${{ secrets.AWS_REGION }} "
-  ECR_REPO: "${{ secrets.AWS_ECR_REPO != '' || github.event.repository.name }}"
+  AWS_REGION: "${{ secrets.AWS_REGION }}"
+  ECR_REPO: "${{ secrets.AWS_ECR_REPO!='' || github.event.repository.name }}"
 
 jobs:
   test:
