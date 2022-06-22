@@ -44,6 +44,12 @@ variable "AWS_ECR_REPO" {
   nullable  = true
 }
 
+variable "AWS_LAMBDA_FUNCTION" {
+  type      = string
+  sensitive = false
+  nullable  = true
+}
+
 variable "ENV_TAG" {
   type      = string
   sensitive = false
@@ -67,8 +73,10 @@ data "aws_caller_identity" "current" {}
 locals {
   project_name        = var.GITHUB_REPO
   account_id          = data.aws_caller_identity.current.account_id
-  ecr_repository_name = try(var.AWS_ECR_REPO, local.project_name)
+  ecr_repository_name = try(var.AWS_ECR_REPO, "${var.GITHUB_REPO}-${var.ENV_TAG}")
   ecr_image_tag       = "latest"
+  lambda_name         = try(var.AWS_LAMBDA_FUNCTION, "${var.GITHUB_REPO}-${var.ENV_TAG}")
+  bucket_name         = try(var.AWS_BUCKET_NAME, "${var.GITHUB_REPO}-${var.ENV_TAG}")
   env_tag             = var.ENV_TAG
 }
 
@@ -103,7 +111,7 @@ data "aws_ecr_image" "lambda_image" {
 
 # Create a new Lambda function
 resource "aws_iam_role" "lambda" {
-  name               = "${local.project_name}-lambda-role"
+  name               = "${local.lambda_name}-lambda-role"
   assume_role_policy = <<EOF
 {
    "Version": "2012-10-17",
@@ -164,7 +172,7 @@ data "aws_iam_policy_document" "lambda" {
 }
 
 resource "aws_iam_policy" "lambda" {
-  name   = "${local.project_name}-lambda-policy"
+  name   = "${local.lambda_name}-lambda-policy"
   path   = "/"
   policy = data.aws_iam_policy_document.lambda.json
 }
@@ -173,7 +181,7 @@ resource "aws_lambda_function" "lambda" {
   depends_on = [
     null_resource.ecr_image
   ]
-  function_name = "${local.project_name}-${local.env_tag}"
+  function_name = local.lambda_name
   role          = aws_iam_role.lambda.arn
   timeout       = 30
   image_uri     = "${aws_ecr_repository.repo.repository_url}@${data.aws_ecr_image.lambda_image.id}"
@@ -289,7 +297,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
 
 # Create an S3 bucket
 resource "aws_s3_bucket" "bucket" {
-  bucket = try(var.AWS_BUCKET_NAME, "${local.project_name}-${local.env_tag}")
+  bucket = local.bucket_name
   versioning {
     enabled = false
   }
