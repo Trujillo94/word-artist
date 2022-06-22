@@ -68,7 +68,7 @@ jobs:
         run: echo "Mocking Unit Tests"
 
   terraform:
-    name: "Deploy using Terraform"
+    name: "Terraform"
     needs: [test]
     if: ${{ always() && (!contains(join(needs.*.result, ','), 'failure') && !contains(join(needs.*.result, ','), 'cancelled') && contains(join(needs.*.result, ','), 'success')) }}
     runs-on: ubuntu-latest
