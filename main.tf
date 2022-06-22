@@ -86,10 +86,10 @@ resource "aws_ecr_repository" "repo" {
 }
 
 resource "null_resource" "ecr_image" {
-  triggers = {
-    python_file = md5(file("${path.module}/main.py"))
-    docker_file = md5(file("${path.module}/Dockerfile"))
-  }
+  # triggers = {
+  #   python_file = md5(file("${path.module}/main.py"))
+  #   docker_file = md5(file("${path.module}/Dockerfile"))
+  # }
 
   provisioner "local-exec" {
     command = <<EOF
@@ -163,7 +163,8 @@ data "aws_iam_policy_document" "lambda" {
 
   statement {
     actions = [
-      "s3:*"
+      "s3:GetObject",
+      "s3:PutObject"
     ]
     effect    = "Allow"
     resources = ["*"]
