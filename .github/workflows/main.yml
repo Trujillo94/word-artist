@@ -55,7 +55,8 @@ permissions:
 
 env:
   AWS_DEFAULT_REGION: "${{ secrets.AWS_REGION }}"
-  # ECR_REPO: "${{ secrets.AWS_ECR_REPO }}"
+  ECR_REPO: "${{ secrets.AWS_ECR_REPO }}"
+  BUCKET_NAME: "${{ secrets.AWS_BUCKET_NAME }}"
 
 jobs:
   test:
@@ -113,8 +114,7 @@ jobs:
       - name: Terraform Plan
         run: |
           export TF_VAR_deployed_at=$(date +%s)
-          if [[ -n ${{ secrets.AWS_ECR_REPO }} ]]; then ECR_REPO=${{ secrets.AWS_ECR_REPO }}; else ECR_REPO=${{ github.event.repository.name }}; fi
-          terraform plan -var=REPOSITORY_NAME=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$ECR_REPO
+          terraform plan -var=REPOSITORY_NAME=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$ECR_REPO -var=AWS_BUCKET_NAME=$BUCKET_NAME
 
         # On push to "main", build or change infrastructure according to Terraform configuration files
         # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
@@ -123,7 +123,7 @@ jobs:
         run: |
           export TF_VAR_deployed_at=$(date +%s)
           if [[ -n ${{ secrets.AWS_ECR_REPO }} ]]; then ECR_REPO=${{ secrets.AWS_ECR_REPO }}; else ECR_REPO=${{ github.event.repository.name }}; fi
-          terraform apply -auto-approve -var=REPOSITORY_NAME=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$ECR_REPO
+          terraform apply -auto-approve -var=REPOSITORY_NAME=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$ECR_REPO  -var=AWS_BUCKET_NAME=$BUCKET_NAME
 
   deploy:
     name: "Deploy"
