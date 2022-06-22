@@ -330,48 +330,31 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
-resource "aws_s3_access_point" "bucket_lambda_access_point" {
+resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
   bucket = aws_s3_bucket.bucket.id
-  name   = "${var.AWS_BUCKET_NAME}-lambda"
+  policy = data.aws_iam_policy_document.allow_access_from_another_account.json
 }
 
-# resource "aws_s3control_access_point_policy" "example" {
-#   access_point_arn = aws_s3_access_point.bucket_lambda_access_point.arn
+data "aws_iam_policy_document" "allow_access_from_another_account" {
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_role.lambda.arn]
+    }
 
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [{
-#       Effect = "Allow"
-#       Action = [
-#         "s3:GetObject"
-#       ],
-#       Sid = "s3-object-lambda",
-#       Principal = {
-#         AWS = "*"
-#       }
-#       Resource = "${aws_s3_access_point.bucket_lambda_access_point.arn}/object/*"
-#       # Resource = ["*"]
-#     }]
-#   })
-# }
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:ListBucket"
+    ]
 
-# resource "aws_s3control_object_lambda_access_point" "bucket_lambda_access_point_control_object" {
-#   name = "${var.AWS_BUCKET_NAME}-lambda"
+    resources = [
+      aws_s3_bucket.bucket.arn,
+      "${aws_s3_bucket.bucket.arn}/*",
+    ]
+  }
+}
 
-#   configuration {
-#     supporting_access_point = aws_s3_access_point.bucket_lambda_access_point.arn
-
-#     transformation_configuration {
-#       actions = ["PutObject"]
-
-#       content_transformation {
-#         aws_lambda {
-#           function_arn = aws_lambda_function.lambda.arn
-#         }
-#       }
-#     }
-#   }
-# }
 
 resource "aws_s3_bucket_acl" "bucket_acl" {
   bucket = aws_s3_bucket.bucket.id
