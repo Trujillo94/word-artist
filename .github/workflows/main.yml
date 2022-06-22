@@ -54,9 +54,10 @@ permissions:
   contents: read
 
 env:
-  AWS_DEFAULT_REGION: "${{ secrets.AWS_REGION }}"
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
   ECR_REPO: "${{ secrets.AWS_ECR_REPO || github.event.repository.name }}-${{ secrets.ENV_TAG }}"
   BUCKET_NAME: "${{ secrets.AWS_BUCKET_NAME || github.event.repository.name }}-${{ secrets.ENV_TAG }}"
+  ENV_TAG: ${{ secrets.ENV_TAG }}
 
 jobs:
   test:
