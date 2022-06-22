@@ -261,7 +261,7 @@ resource "aws_api_gateway_deployment" "apideploy" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.sample_api.id
-  stage_name  = local.ENV_TAG
+  stage_name  = local.env_tag
   variables = {
     deployed_at = var.deployed_at
   }
