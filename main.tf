@@ -288,11 +288,11 @@ resource "aws_s3_bucket" "bucket" {
 
 resource "aws_s3_access_point" "bucket_lambda_access_point" {
   bucket = aws_s3_bucket.bucket.id
-  name   = "${local.project_name}-lambda"
+  name   = "${var.AWS_BUCKET_NAME}-lambda"
 }
 
 resource "aws_s3control_object_lambda_access_point" "bucket_lambda_access_point_control_object" {
-  name = "${local.project_name}-lambda"
+  name = "${var.AWS_BUCKET_NAME}-lambda"
 
   configuration {
     supporting_access_point = aws_s3_access_point.bucket_lambda_access_point.arn
