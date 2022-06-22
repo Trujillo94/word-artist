@@ -113,7 +113,7 @@ jobs:
       - name: Terraform Plan
         run: |
           export TF_VAR_deployed_at=$(date +%s)
-          terraform plan -var=REPOSITORY_NAME=${{ github.event.repository.name }} -var=AWS_ECR_REPO=${{ env.ECR_REPO }}
+          terraform plan -var=REPOSITORY_NAME=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$env.ECR_REPO
 
         # On push to "main", build or change infrastructure according to Terraform configuration files
         # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
