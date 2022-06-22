@@ -148,6 +148,7 @@ jobs:
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
         env:
           AWS_EC2_METADATA_DISABLED: true
+          ECR_REPO: ${{ steps.terraform-apply.outputs.ecr_repo }}
       - name: Remove previous ECR images
         run: |
           IMAGES_TO_DELETE=$( aws ecr list-images --repository-name $ECR_REPO --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json )
