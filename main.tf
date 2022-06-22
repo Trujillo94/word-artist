@@ -199,6 +199,11 @@ resource "aws_iam_policy" "lambda" {
         EOF
 }
 
+resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment" {
+  role       = aws_iam_role.lambda.name
+  policy_arn = aws_iam_policy.lambda.arn
+}
+
 resource "aws_lambda_function" "lambda" {
   depends_on = [
     null_resource.ecr_image
