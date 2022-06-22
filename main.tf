@@ -351,7 +351,7 @@ resource "aws_s3_bucket_acl" "bucket_acl" {
   acl    = "private"
 }
 
-output "lambda_name" {
+output "lambda_function" {
   value = aws_lambda_function.lambda.id
 }
 
@@ -361,5 +361,9 @@ output "base_url" {
 
 output "bucket_name" {
   value = aws_s3_bucket.bucket.id
+}
+
+output "ecr_repo" {
+  value = aws_ecr_repository.repo.id
 }
 

@@ -11,10 +11,6 @@ permissions:
 
 env:
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-  ECR_REPO: "${{ github.event.repository.name }}-${{ secrets.ENV_TAG }}"
-  LAMBDA_FUNCTION: "${{ github.event.repository.name }}-${{ secrets.ENV_TAG }}"
-  BUCKET_NAME: "${{ github.event.repository.name }}-${{ secrets.ENV_TAG }}"
-  ENV_TAG: ${{ secrets.ENV_TAG }}
 
 jobs:
   test:
@@ -41,6 +37,10 @@ jobs:
       TF_VAR_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       TF_VAR_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TF_VAR_AWS_REGION: ${{ secrets.AWS_REGION }}
+      ECR_REPO: "${{ github.event.repository.name }}-${{ secrets.ENV_TAG }}"
+      LAMBDA_FUNCTION: "${{ github.event.repository.name }}-${{ secrets.ENV_TAG }}"
+      BUCKET_NAME: "${{ github.event.repository.name }}-${{ secrets.ENV_TAG }}"
+
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
@@ -70,6 +70,7 @@ jobs:
 
       # Generates an execution plan for Terraform
       - name: Terraform Plan
+        id: terraform-plan
         run: |
           export TF_VAR_deployed_at=$(date +%s)
           terraform plan -var=GITHUB_REPO=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$ECR_REPO -var=AWS_BUCKET_NAME=$BUCKET_NAME -var=ENV_TAG=$ENV_TAG -var=AWS_LAMBDA_FUNCTION=$LAMBDA_FUNCTION
@@ -77,6 +78,7 @@ jobs:
         # On push to "main", build or change infrastructure according to Terraform configuration files
         # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
       - name: Terraform Apply
+        id: terraform-apply
         # if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
         run: |
           export TF_VAR_deployed_at=$(date +%s)
@@ -112,16 +114,19 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPO: ${{ steps.terraform-apply.outputs.ecr_repo }}
+          LAMBDA_FUNCTION: ${{ steps.terraform-apply.outputs.lambda_function }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG"
+          export IMAGE_URI=$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
+          docker build -t $IMAGE_URI .
+          docker push $IMAGE_URI
+          echo "::set-output name=image::$IMAGE_URI"
 
       - name: Update Lambda's Image
         id: update-lambda
         run: |
-          aws lambda update-function-code --region $AWS_DEFAULT_REGION --function-name $LAMBDA_FUNCTION --image-uri $ECR_REPO
+          aws lambda update-function-code --region $AWS_DEFAULT_REGION --function-name $LAMBDA_FUNCTION --image-uri $IMAGE_URI
 
   removing-images:
     name: "Removing previous ECR images"
