@@ -89,7 +89,6 @@ jobs:
     name: "Deploy"
     needs: [terraform]
     if: ${{ always() && (!contains(join(needs.*.result, ','), 'failure') && !contains(join(needs.*.result, ','), 'cancelled') && contains(join(needs.*.result, ','), 'success')) }}
-    # if: ${{ 1==0 }}
     runs-on: ubuntu-latest
     environment: production
 
@@ -116,24 +115,26 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPO: ${{ steps.terraform-apply.outputs.ecr_repo }}
-          LAMBDA_FUNCTION: ${{ steps.terraform-apply.outputs.lambda_function }}
+          ECR_REPO: ${{ job.terraform.steps.terraform-apply.outputs.ecr_repo }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG"
+          IMAGE_URI=$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
+          docker build -t $IMAGE_URI .
+          docker push $IMAGE_URI
+          echo "::set-output name=image::$IMAGE_URI"
 
       - name: Update Lambda's Image
         id: update-lambda
+        env:
+          LAMBDA_FUNCTION: ${{ job.terraform.steps.terraform-apply.outputs.lambda_function }}
         run: |
-          aws lambda update-function-code --region $AWS_DEFAULT_REGION --function-name $LAMBDA_FUNCTION --image-uri $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
+          IMAGE_URI=$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
+          aws lambda update-function-code --region $AWS_DEFAULT_REGION --function-name $LAMBDA_FUNCTION --image-uri $IMAGE_URI
 
   removing-images:
     name: "Removing previous ECR images"
     needs: [deploy]
-    # if: ${{ always() && (!contains(join(needs.*.result, ','), 'failure') && !contains(join(needs.*.result, ','), 'cancelled') && contains(join(needs.*.result, ','), 'success')) }}
-    if: ${{ 1==0 }}
+    if: ${{ always() && (!contains(join(needs.*.result, ','), 'failure') && !contains(join(needs.*.result, ','), 'cancelled') && contains(join(needs.*.result, ','), 'success')) }}
     runs-on: ubuntu-latest
     environment: production
     defaults:
@@ -149,13 +150,13 @@ jobs:
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
         env:
           AWS_EC2_METADATA_DISABLED: true
-          ECR_REPO: ${{ steps.terraform-apply.outputs.ecr_repo }}
+          ECR_REPO: ${{ job.terraform.steps.terraform-apply.outputs.ecr_repo }}
       - name: Remove previous ECR images
         run: |
-          IMAGES_TO_DELETE=$( aws ecr list-images --repository-name ${{ env.ECR_REPO }} --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json )
+          IMAGES_TO_DELETE=$( aws ecr list-images --repository-name $ECR_REPO --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json )
           N_IMAGES=${#IMAGES_TO_DELETE[@]}
           if [[ -n ${{ secrets.N_OLD_IMAGES_TO_KEEP }} ]]; then N_OLD_IMAGES_TO_KEEP=${{ secrets.N_OLD_IMAGES_TO_KEEP }}; else N_OLD_IMAGES_TO_KEEP=0; fi
-          if (( $N_IMAGES > $N_OLD_IMAGES_TO_KEEP )); then aws ecr batch-delete-image --repository-name ${{ env.ECR_REPO }} --image-ids "${IMAGES_TO_DELETE[@]:$N_OLD_IMAGES_TO_KEEP}"; else echo "No images to delete. Current images: $N_IMAGES"; fi
+          if (( $N_IMAGES > $N_OLD_IMAGES_TO_KEEP )); then aws ecr batch-delete-image --repository-name $ECR_REPO --image-ids "${IMAGES_TO_DELETE[@]:$N_OLD_IMAGES_TO_KEEP}"; else echo "No images to delete. Current images: $N_IMAGES"; fi
 
   slack-notification:
     runs-on: ubuntu-latest
