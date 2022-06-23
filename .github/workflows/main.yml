@@ -84,6 +84,8 @@ jobs:
         run: |
           export TF_VAR_deployed_at=$(date +%s)
           terraform apply -auto-approve -var=GITHUB_REPO=${{ github.event.repository.name }} -var=AWS_ECR_REPO=$ECR_REPO  -var=AWS_BUCKET_NAME=$BUCKET_NAME -var=ENV_TAG=$ENV_TAG -var=AWS_LAMBDA_FUNCTION=$LAMBDA_FUNCTION
+          echo "::set-output name=ecr_repo::$ECR_REPO"
+          echo "::set-output name=lambda_function::$ECR_REPO"
 
   deploy:
     name: "Deploy"
@@ -115,7 +117,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPO: ${{ job.terraform.steps.terraform-apply.outputs.ecr_repo }}
+          ECR_REPO: ${{ steps.terraform-apply.outputs.ecr_repo }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           IMAGE_URI=$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
@@ -126,7 +128,7 @@ jobs:
       - name: Update Lambda's Image
         id: update-lambda
         env:
-          LAMBDA_FUNCTION: ${{ job.terraform.steps.terraform-apply.outputs.lambda_function }}
+          LAMBDA_FUNCTION: ${{ steps.terraform-apply.outputs.lambda_function }}
         run: |
           IMAGE_URI=$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
           aws lambda update-function-code --region $AWS_DEFAULT_REGION --function-name $LAMBDA_FUNCTION --image-uri $IMAGE_URI
@@ -150,7 +152,7 @@ jobs:
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
         env:
           AWS_EC2_METADATA_DISABLED: true
-          ECR_REPO: ${{ job.terraform.steps.terraform-apply.outputs.ecr_repo }}
+          ECR_REPO: ${{ steps.terraform-apply.outputs.ecr_repo }}
       - name: Remove previous ECR images
         run: |
           IMAGES_TO_DELETE=$( aws ecr list-images --repository-name $ECR_REPO --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json )
