@@ -307,7 +307,7 @@ resource "aws_api_gateway_deployment" "apideploy" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.api.id
-  stage_name  = local.env_tag
+  # stage_name  = local.env_tag
   variables = {
     deployed_at = var.deployed_at
   }
@@ -329,7 +329,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
   source_arn = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
 }
 
-resource "aws_api_gateway_method_settings" "example" {
+resource "aws_api_gateway_method_settings" "api-settings" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = aws_api_gateway_stage.api-stage.stage_name
   method_path = "*/*"
