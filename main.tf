@@ -190,20 +190,20 @@ resource "aws_iam_policy" "lambda" {
         EOF
 }
 
-resource "aws_iam_policy" "lambda-basic-execution-policy" {
-  name   = "${local.lambda_name}-lambda-policy"
-  path   = "/"
-  policy = data.aws_iam_policy_document.lambda.json
+# resource "aws_iam_policy" "lambda-basic-execution-policy" {
+#   name   = "${local.lambda_name}-lambda-policy"
+#   path   = "/"
+#   policy = data.aws_iam_policy_document.lambda.json
+# }
+
+resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment-s3outpostfullaccess" {
+  role       = aws_iam_role.lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3OutpostsFullAccess"
 }
 
-resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment-1" {
+resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment-lambdabasicexecutionrole" {
   role       = aws_iam_role.lambda.name
-  policy_arn = aws_iam_policy.lambda.arn
-}
-
-resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment-2" {
-  role       = aws_iam_role.lambda.name
-  policy_arn = aws_iam_policy.lambda-basic-execution-policy.arn
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 resource "aws_lambda_function" "lambda" {
