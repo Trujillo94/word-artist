@@ -161,15 +161,6 @@ data "aws_iam_policy_document" "lambda" {
     sid       = "CodeCommit"
   }
 
-  # statement {
-  #   actions = [
-  #     "s3:GetObject",
-  #     "s3:PutObject"
-  #   ]
-  #   effect    = "Allow"
-  #   resources = ["*"]
-  #   sid       = "S3"
-  # }
 }
 
 resource "aws_iam_policy" "lambda" {
@@ -199,6 +190,12 @@ resource "aws_iam_policy" "lambda" {
         EOF
 }
 
+resource "aws_iam_policy" "lambda-basic-execution-policy" {
+  name   = "${local.lambda_name}-lambda-policy"
+  path   = "/"
+  policy = data.aws_iam_policy_document.lambda.json
+}
+
 resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment-1" {
   role       = aws_iam_role.lambda.name
   policy_arn = aws_iam_policy.lambda.arn
@@ -206,7 +203,7 @@ resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment-1" {
 
 resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment-2" {
   role       = aws_iam_role.lambda.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = aws_iam_policy.lambda-basic-execution-policy.arn
 }
 
 resource "aws_lambda_function" "lambda" {
