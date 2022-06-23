@@ -1,5 +1,6 @@
 import logging
 
+from src.config.aws import BUCKET_NAME, DEFAULT_REGION
 from src.wrappers.aws.connect import boto3_session
 from src.wrappers.aws.exception import AWSException
 
@@ -53,7 +54,8 @@ class S3Wrapper:
         s3_client = self.__s3_client
         response = s3_client.upload_file(
             local_file_name, bucket, s3_file_name, ExtraArgs=extra_args)
-        return response
+        object_url = f"https://s3-{DEFAULT_REGION}.amazonaws.com/{BUCKET_NAME}/{s3_file_name}"
+        return object_url
 
     @AWSException.error_handling
     def list_bucket_objects(self, bucket):
