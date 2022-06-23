@@ -117,7 +117,8 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPO: ${{ job.terraform.steps.terraform-apply.outputs.ecr_repo }}
+          # ECR_REPO: ${{ job.terraform.steps.terraform-apply.outputs.ecr_repo }}
+          ECR_REPO: word-artist-prod
           IMAGE_TAG: ${{ github.sha }}
         run: |
           IMAGE_URI=$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
@@ -128,7 +129,8 @@ jobs:
       - name: Update Lambda's Image
         id: update-lambda
         env:
-          LAMBDA_FUNCTION: ${{ job.terraform.steps.terraform-apply.outputs.lambda_function }}
+          # LAMBDA_FUNCTION: ${{ job.terraform.steps.terraform-apply.outputs.lambda_function }}
+          LAMBDA_FUNCTION: word-artist-prod
         run: |
           IMAGE_URI=${{ steps.build-image.outputs.image_uri }}
           aws lambda update-function-code --region $AWS_DEFAULT_REGION --function-name $LAMBDA_FUNCTION --image-uri $IMAGE_URI
@@ -152,7 +154,8 @@ jobs:
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
         env:
           AWS_EC2_METADATA_DISABLED: true
-          ECR_REPO: ${{ job.terraform.steps.terraform-apply.outputs.ecr_repo }}
+          # ECR_REPO: ${{ job.terraform.steps.terraform-apply.outputs.ecr_repo }}
+          ECR_REPO: word-artist-prod
       - name: Remove previous ECR images
         run: |
           IMAGES_TO_DELETE=$( aws ecr list-images --repository-name $ECR_REPO --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json )
