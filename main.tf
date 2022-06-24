@@ -260,7 +260,12 @@ resource "aws_api_gateway_integration" "integration" {
 
   # Transforms the incoming XML request to JSON
   request_templates = {
-    "application/xml" = <<EOF
+    "application/xml"                   = <<EOF
+    {
+      "body" : $input.json('$')
+    }
+    EOF
+    "application/x-www-form-urlencoded" = <<EOF
     {
       "body" : $input.json('$')
     }
