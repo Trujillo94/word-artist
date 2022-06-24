@@ -1,0 +1,12 @@
+{
+	"blocks": [{
+		"type": "image",
+		"title": {
+			"type": "plain_text",
+			"text": "{img_name}",
+			"emoji": true
+		},
+		"image_url": "{img_url}",
+		"alt_text": "{img_name}"
+	}]
+}

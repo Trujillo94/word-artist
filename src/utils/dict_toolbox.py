@@ -1,12 +1,12 @@
 import datetime
 
-from src.utils.list_toolbox import make_unique, sort_list
+from src.utils.list_toolbox import make_unique, sort_list, transform_list
 
 
 def check_keys(d: dict, keys: list or tuple):
     missing_keys = get_missing_keys(d, keys)
     if len(missing_keys) > 0:
-         raise KeyError(
+        raise KeyError(
             f'Dictionary has not all requestes keys. Missing: {missing_keys}')
 
 
@@ -215,6 +215,20 @@ def get_all_values_of_specific_types(d, types):
         raise TypeError(
             f'Argument <types> must be a <list> not <{type(types)}>-type.')
     return list(filter(lambda v: type(v) in types, d.values()))
+
+
+def apply_function_to_all_values_of_type(d, _type, f, recursive=True):
+    for key, value in d.items():
+        if type(value) is _type:
+            d[key] = f(value)
+        if recursive:
+            if type(value) is dict:
+                d[key] = apply_function_to_all_values_of_type(
+                    value, _type, f, recursive=recursive)
+            elif type(value) is list or type(value) is tuple:
+                d[key] = transform_list(value, lambda e: apply_function_to_all_values_of_type(
+                    e, _type, f, recursive=recursive))
+    return d
 
 
 def get_dict_from_list_by_key_value(ls, key, value):

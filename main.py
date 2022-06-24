@@ -10,9 +10,9 @@ def handler(event, context):
     logger.info(f'context: {context}')
     text = event['text']
     style = event.get('style', None)
-    img_url = SlackWordArtist().compute(text, style=style)
+    slack_msg = SlackWordArtist().compute(text, style=style)
     logger.info("Successful execution")
-    return img_url
+    return slack_msg
     # return event
 
 
