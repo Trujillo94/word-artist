@@ -260,14 +260,41 @@ resource "aws_api_gateway_integration" "integration" {
 
   # Transforms the incoming XML request to JSON
   request_templates = {
-    "application/xml"                   = <<EOF
-    {
-      "body" : $input.json('$')
-    }
-    EOF
     "application/x-www-form-urlencoded" = <<EOF
+    ## Parses x-www-urlencoded data to JSON for AWS' API Gateway
+    ##
+    ## Author: Christian E Willman <christian@willman.io>
+
+    #if ( $context.httpMethod == "POST" )
+      #set( $requestBody = $input.path('$') )
+    #else
+      #set( $requestBody = "" )
+    #end
+
+    #set( $keyValuePairs = $requestBody.split("&") )
+    #set( $params = [] )
+
+    ## Filter empty key-value pairs
+    #foreach( $kvp in $keyValuePairs )
+      #set( $operands = $kvp.split("=") )
+
+      #if( $operands.size() == 1 || $operands.size() == 2 )
+        #set( $success = $params.add($operands) )
+      #end
+    #end
+
     {
-      "body" : $input.json('$')
+      #foreach( $param in $params )
+        #set( $key = $util.urlDecode($param[0]) )
+
+        #if( $param.size() > 1 )
+          #set( $value = $util.urlDecode($param[1]) )
+        #else
+          #set( $value = "" )
+        #end
+
+        "$key": "$value"#if( $foreach.hasNext ),#end
+      #end
     }
     EOF
   }
