@@ -14,15 +14,37 @@
 			{
 				"type": "actions",
 				"elements": [{
-					"type": "button",
-					"text": {
-						"type": "plain_text",
-						"text": "Send",
-						"emoji": true
+						"type": "button",
+						"text": {
+							"type": "plain_text",
+							"text": "Send",
+							"emoji": true
+						},
+						"value": "send",
+						"action_id": "send",
+						"style": "primary"
 					},
-					"value": "click_me_123",
-					"action_id": "actionId-0"
-				}]
+					{
+						"type": "button",
+						"text": {
+							"type": "plain_text",
+							"text": "Change style",
+							"emoji": true
+						},
+						"value": "send",
+						"action_id": "change_style"
+					},
+					{
+						"type": "button",
+						"text": {
+							"type": "plain_text",
+							"text": "Cancel",
+							"emoji": true
+						},
+						"value": "send",
+						"action_id": "cancel"
+					}
+				]
 			}
 		]
 	}]
