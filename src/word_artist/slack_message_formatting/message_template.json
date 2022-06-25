@@ -16,6 +16,7 @@
 				"callback_id": "events",
 				"elements": [{
 						"type": "button",
+						"name": "action",
 						"text": {
 							"type": "plain_text",
 							"text": "Send",
@@ -27,22 +28,24 @@
 					},
 					{
 						"type": "button",
+						"name": "action",
 						"text": {
 							"type": "plain_text",
 							"text": "Change style",
 							"emoji": true
 						},
-						"value": "send",
+						"value": "change",
 						"action_id": "change_style"
 					},
 					{
 						"type": "button",
+						"name": "action",
 						"text": {
 							"type": "plain_text",
 							"text": "Cancel",
 							"emoji": true
 						},
-						"value": "send",
+						"value": "cancel",
 						"action_id": "cancel"
 					}
 				]
