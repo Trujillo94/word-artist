@@ -15,11 +15,9 @@
         },
         {
           "type": "actions",
-          "callback_id": "events",
-          "actions": [
+          "elements": [
             {
               "type": "button",
-              "name": "action",
               "value": "send",
               "action_id": "send",
               "text": "Send",
@@ -27,14 +25,12 @@
             },
             {
               "type": "button",
-              "name": "action",
               "value": "change",
               "action_id": "change_style",
               "text": "Change style"
             },
             {
               "type": "button",
-              "name": "action",
               "value": "cancel",
               "action_id": "cancel",
               "text": "Cancel"
