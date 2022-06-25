@@ -34,7 +34,7 @@
                 "text": "Change style",
                 "emoji": true
               },
-              "value": "send",
+              "value": "change_style",
               "action_id": "change_style"
             },
             {
@@ -44,7 +44,7 @@
                 "text": "Cancel",
                 "emoji": true
               },
-              "value": "send",
+              "value": "cancel",
               "action_id": "cancel"
             }
           ]
