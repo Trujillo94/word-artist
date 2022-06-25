@@ -1,12 +1,29 @@
 {
-	"blocks": [{
-		"type": "image",
-		"title": {
-			"type": "plain_text",
-			"text": "{img_name}",
-			"emoji": true
-		},
-		"image_url": "{img_url}",
-		"alt_text": "{img_name}"
+	"attachments": [{
+		"color": "blue",
+		"blocks": [{
+				"type": "image",
+				"title": {
+					"type": "plain_text",
+					"text": "{img_name}",
+					"emoji": true
+				},
+				"image_url": "https://s3-eu-west-3.amazonaws.com/word-artist-prod/dewdew-hehe.png",
+				"alt_text": "{img_name}"
+			},
+			{
+				"type": "actions",
+				"elements": [{
+					"type": "button",
+					"text": {
+						"type": "plain_text",
+						"text": "Send",
+						"emoji": true
+					},
+					"value": "click_me_123",
+					"action_id": "actionId-0"
+				}]
+			}
+		]
 	}]
 }
