@@ -1,0 +1,43 @@
+{
+  "attachments": [
+    {
+      "color": "#160080",
+      "blocks": [
+        {
+          "type": "image",
+          "title": {
+            "type": "plain_text",
+            "text": "eis",
+            "emoji": true
+          },
+          "image_url": "https://s3-eu-west-3.amazonaws.com/word-artist-prod/dewdew-hehe.png",
+          "alt_text": "eis"
+        },
+        {
+          "type": "actions",
+          "elements": [
+            {
+              "type": "button",
+              "value": "send",
+              "action_id": "send",
+              "text": "Send",
+              "style": "primary"
+            },
+            {
+              "type": "button",
+              "value": "change",
+              "action_id": "change_style",
+              "text": "Change style"
+            },
+            {
+              "type": "button",
+              "value": "cancel",
+              "action_id": "cancel",
+              "text": "Cancel"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
