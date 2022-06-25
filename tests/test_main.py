@@ -10,7 +10,8 @@ def test_main():
         "text": "Is this working",
         "style": None
     }
-    handler(event, {})
+    response = handler(event, {})
+    print(response)
 
 
 if __name__ == "__main__":
