@@ -16,7 +16,7 @@
         {
           "type": "actions",
           "callback_id": "events",
-          "elements": [
+          "actions": [
             {
               "type": "button",
               "name": "action",
