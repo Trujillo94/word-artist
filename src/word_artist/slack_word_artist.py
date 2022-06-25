@@ -39,7 +39,8 @@ class SlackWordArtist:
 
     def __generate_slack_message(self):
         img_url = self.__img_url
-        msg = SlackMessageFormatter().compute(img_url)
+        text = self.__text
+        msg = SlackMessageFormatter().compute(img_url, text=text)
         return msg
 
     def __compute_bucket_route(self, text: str, style: str, filepath: str):

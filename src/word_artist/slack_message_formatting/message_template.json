@@ -5,11 +5,11 @@
 				"type": "image",
 				"title": {
 					"type": "plain_text",
-					"text": "{img_name}",
+					"text": "{text}",
 					"emoji": true
 				},
 				"image_url": "https://s3-eu-west-3.amazonaws.com/word-artist-prod/dewdew-hehe.png",
-				"alt_text": "{img_name}"
+				"alt_text": "{text}"
 			},
 			{
 				"type": "actions",

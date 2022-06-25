@@ -18,12 +18,11 @@ class SlackMessageFormatter:
     def __init__(self):
         self.__load_message_template()
 
-    def compute(self, img_url: str):
+    def compute(self, img_url: str, text: str | None = None):
         msg = None
         template = self.__template
-        img_name = 'Your Amazing WordArt.'
         msg = apply_function_to_all_values_of_type(
-            template, str, lambda s: s.format(img_url=img_url, img_name=img_name))
+            template, str, lambda s: s.format(img_url=img_url, text=text))
         return msg
 
     # Private:
