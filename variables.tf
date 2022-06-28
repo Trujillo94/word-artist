@@ -41,11 +41,11 @@ variable "deployed_at" {
 }
 
 locals {
-  project_name         = var.GITHUB_REPO
-  account_id           = data.aws_caller_identity.current.account_id
-  ecr_repository_name  = try(var.AWS_ECR_REPO, "${var.GITHUB_REPO}-${var.ENV_TAG}")
-  ecr_image_tag        = "latest"
-  generate_lambda_name = "${var.GITHUB_REPO}-generate-${var.ENV_TAG}"
-  bucket_name          = try(var.AWS_BUCKET_NAME, "${var.GITHUB_REPO}-${var.ENV_TAG}")
-  env_tag              = var.ENV_TAG
+  project_name        = var.GITHUB_REPO
+  account_id          = data.aws_caller_identity.current.account_id
+  ecr_repository_name = try(var.AWS_ECR_REPO, "${var.GITHUB_REPO}-${var.ENV_TAG}")
+  ecr_image_tag       = "latest"
+  lambda_name         = "${var.GITHUB_REPO}-${var.ENV_TAG}"
+  bucket_name         = try(var.AWS_BUCKET_NAME, "${var.GITHUB_REPO}-${var.ENV_TAG}")
+  env_tag             = var.ENV_TAG
 }
