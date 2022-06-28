@@ -12,15 +12,12 @@ def handler(event, context):
     slack_msg = {}
     if 'text' in event:
         text = event['text']
-        style = event.get('style', None)
-        slack_msg = SlackWordArtist().run(text, style=style)
-    elif 'payload' in event:
-        print(event['payload'])
     else:
-        pass
+        text = 'No text provided'
+    style = event.get('style', None)
+    slack_msg = SlackWordArtist().run(text, style=style)
     logger.info("Successful execution")
     return slack_msg
-    # return event
 
 
 if __name__ == "__main__":

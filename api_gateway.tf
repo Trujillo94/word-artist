@@ -34,7 +34,6 @@ resource "aws_api_gateway_integration" "lambda" {
     "integration.request.header.X-Authorization" = "'static'"
   }
 
-  # Transforms the incoming XML request to JSON
   request_templates = {
     "application/x-www-form-urlencoded" = <<EOF
 ## Parses x-www-urlencoded data to JSON for AWS' API Gateway
