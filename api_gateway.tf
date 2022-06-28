@@ -27,7 +27,7 @@ resource "aws_api_gateway_integration" "generate" {
 
   integration_http_method = "POST"
   type                    = "AWS"
-  uri                     = aws_lambda_function.lambda.invoke_arn
+  uri                     = aws_lambda_function.generate.invoke_arn
   timeout_milliseconds    = 29000
 
   request_parameters = {
@@ -105,7 +105,7 @@ resource "aws_api_gateway_integration" "lambda_root" {
 
   integration_http_method = "POST"
   type                    = "AWS"
-  uri                     = aws_lambda_function.lambda.invoke_arn
+  uri                     = aws_lambda_function.generate.invoke_arn
 }
 
 resource "aws_api_gateway_deployment" "apideploy" {

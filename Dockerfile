@@ -16,6 +16,10 @@ RUN apt-get update && \
     cmake \
     # unzip \
     # ffmpeg \
+    libglib2.0 \
+    libnss3 \
+    libgconf-2-4 \
+    libfontconfig \
     xvfb \
     libcurl4-openssl-dev
 
@@ -42,6 +46,8 @@ RUN pip3 --no-cache-dir install -r requirements.txt
 
 COPY geckodriver /usr/local/bin/
 COPY chromedriver /usr/local/bin/
+# ADD https://objects.githubusercontent.com/github-production-release-asset-2e65be/84632322/975fea80-1573-11eb-8723-6279dc83226c?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20220608%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220608T140116Z&X-Amz-Expires=300&X-Amz-Signature=e71144f2dfe40ddbf42fa281a701304c2ef33aff3502480282777538d8f52e68&X-Amz-SignedHeaders=host&actor_id=32714352&key_id=0&repo_id=84632322&response-content-disposition=attachment%3B%20filename%3Dstable-headless-chromium-amazonlinux-2.zip&response-content-type=application%2Foctet-stream /usr/local/bin/
+
 
 ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
 COPY entry.sh /

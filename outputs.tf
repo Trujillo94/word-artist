@@ -1,5 +1,5 @@
 output "lambda_function" {
-  value = aws_lambda_function.lambda.id
+  value = aws_lambda_function.generate.id
 }
 
 output "bucket_name" {
