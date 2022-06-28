@@ -13,7 +13,7 @@ class SlackWordArtist:
     def __init__(self):
         pass
 
-    def compute(self, text: str, style: str | None = None):
+    def run(self, text: str, style: str | None = None):
         self.__generate_image(text, style=style)
         self.__upload_image()
         slack_msg = self.__generate_slack_message()
