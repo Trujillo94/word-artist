@@ -35,10 +35,11 @@ resource "aws_api_gateway_integration" "lambda" {
   }
 
   request_templates = {
+    "application/json"                  = "$input.json('$.body')"
     "application/x-www-form-urlencoded" = <<EOF
 ## Parses x-www-urlencoded data to JSON for AWS' API Gateway
 ##
-## Author: Christian E Willman <christian@willman.io>
+## Author: Oriol Trujillo <trujillo.oriol@gmail.io>
 
 #if ( $context.httpMethod == "POST" )
   #set( $requestBody = $input.path('$') )
@@ -67,8 +68,11 @@ resource "aws_api_gateway_integration" "lambda" {
     #else
       #set( $value = "" )
     #end
-
-    "$key": "$value"#if( $foreach.hasNext ),#end
+    #if( $value.toString().contains("{") || $value.toString().contains("{") )
+        "$key": $value#if( $foreach.hasNext ),#end
+    #else
+        "$key": "$value"#if( $foreach.hasNext ),#end
+    #end
   #end
 }
     EOF
