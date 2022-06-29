@@ -17,7 +17,9 @@ def handler(event, context):
         slack_msg = SlackWordArtist().run(text, style=style)
     elif 'payload' in event:
         payload = event['payload']
-        SlackWrapper().send_message(payload)
+        channel_id = payload['channel']['id']
+        text = payload['actions'][0]['value']
+        SlackWrapper().send_message(channel_id, text)
     else:
         raise Exception(f'Invalid event. Event: <{event}>')
     logger.info("Successful execution")

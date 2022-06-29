@@ -1,6 +1,5 @@
 import logging
 
-from src.config.slack import SLACK_BOT_TOKEN
 from src.wrappers.slack.connect import slack_client
 from src.wrappers.slack.exception import SlackException
 
@@ -18,6 +17,5 @@ class SlackWrapper:
         return self.__client.api_test()
 
     @SlackException.error_handling
-    def send_message(self, payload):
-        raise NotImplementedError
-        # self.__client.chat_postMessage(**payload)
+    def send_message(self, channel_id, text, as_user=False):
+        self.__client.chat_postMessage(channel=channel_id, text=text)
