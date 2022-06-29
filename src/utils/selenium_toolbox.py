@@ -1,7 +1,7 @@
 import os
 import time
 from datetime import datetime
-from distutils.file_util import move_file
+from shutil import move
 from tempfile import gettempdir
 
 from selenium import webdriver
@@ -208,7 +208,7 @@ class AbstractSeleniumCrawler:
         last_filepath = self.get_last_download_filepath()
         if new_filepath is None:
             new_filepath = self._get_new_filepath(last_filepath)
-        move_file(last_filepath, new_filepath)
+        move(last_filepath, new_filepath)
         return new_filepath
 
     # Protected:

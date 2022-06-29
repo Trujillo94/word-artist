@@ -1,0 +1,50 @@
+{
+  "payload": {
+    "type": "block_actions",
+    "user": {
+      "id": "U03HWRB6U5B",
+      "username": "trujillo.oriol",
+      "name": "trujillo.oriol",
+      "team_id": "T03HZL7AGSF"
+    },
+    "api_app_id": "A03J268R2S0",
+    "token": "I2qr45qIMQ9Hce8swoGrUbCc",
+    "container": {
+      "type": "message_attachment",
+      "message_ts": "1656515259.000100",
+      "attachment_id": 1,
+      "channel_id": "C03HT4T2AS2",
+      "is_ephemeral": true,
+      "is_app_unfurl": false
+    },
+    "trigger_id": "3730542818934.3611687356899.b40fae44af3a4878a5fbc699dc0e6da0",
+    "team": {
+      "id": "T03HZL7AGSF",
+      "domain": "slackappsdeve-kb84670"
+    },
+    "enterprise": null,
+    "is_enterprise_install": false,
+    "channel": {
+      "id": "C03HT4T2AS2",
+      "name": "general"
+    },
+    "state": {
+      "values": {}
+    },
+    "response_url": "https://hooks.slack.com/actions/T03HZL7AGSF/3749795359745/PFN8K19x6WVwwwz7hifToF4e",
+    "actions": [
+      {
+        "action_id": "send",
+        "block_id": "58Pf",
+        "text": {
+          "type": "plain_text",
+          "text": "Send",
+          "emoji": true
+        },
+        "value": "send",
+        "type": "button",
+        "action_ts": "1656515273.795950"
+      }
+    ]
+  }
+}
