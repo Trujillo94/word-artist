@@ -13,7 +13,7 @@
       "type": "message_attachment",
       "message_ts": "1656515259.000100",
       "attachment_id": 1,
-      "channel_id": "C03HT4T2AS2",
+      "channel_id": null,
       "is_ephemeral": true,
       "is_app_unfurl": false
     },

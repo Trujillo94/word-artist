@@ -19,7 +19,8 @@ def handler(event, context):
         payload = event['payload']
         channel_id = payload['channel']['id']
         text = payload['actions'][0]['value']
-        SlackWrapper().send_message(channel_id, text)
+        user_id = payload['user']['id']
+        SlackWrapper().send_message(channel_id, text, user_id=user_id)
     else:
         raise Exception(f'Invalid event. Event: <{event}>')
     logger.info("Successful execution")
