@@ -38,24 +38,21 @@ def make_keys_lowercase(d: dict):
     return rename_keys(d, keys_dict)
 
 
-def dictionary_search(d: dict, path: str, ignore_case=False):
-    try:
-        keys = path.split('/')
-        for key in keys:
+def dictionary_search(d: dict, path: str, ignore_case=False) -> dict:
+    keys = path.split('/')
+    for key in keys:
+        try:
             if ignore_case:
                 d = get_value_ignoring_case(d, key)
             else:
                 d = d[key]
-        return d
-    except KeyError as exception:
-        msg = str(exception)
-        raise Exception(
-            f'Invalid path ({path}) for this dictionary. {key} key not found.')
-    except Exception as exception:
-        raise exception
+        except KeyError as e:
+            raise Exception(
+                f'Invalid path ({path}) for this dictionary. {key} key not found.') from e
+    return d
 
 
-def get_value_ignoring_case(d, key):
+def get_value_ignoring_case(d, key) -> dict:
     if type(key) is not str:
         raise TypeError(
             'Invalid type for specified key <{key}>. Must be a string.')
@@ -64,7 +61,7 @@ def get_value_ignoring_case(d, key):
     if len(ls) > 0:
         return d[ls[0]]
     else:
-        return KeyError(f'Key <{key}> not fount in dictionary.')
+        raise KeyError(f'Key <{key}> not fount in dictionary.')
 
 
 def remove_keys_from_dict(d, keys, ignore_missing_keys=False):
@@ -189,13 +186,13 @@ def merge_all_dicts_in_dict(d, ignore_errors=False, numeric_behaviour='sum', lis
     return merge_all_values_of_specific_type_in_dict(d, dict, ignore_errors=ignore_errors, numeric_behaviour=numeric_behaviour, lists_unique=lists_unique, lists_sort=lists_sort)
 
 
-def merge_all_values_of_specific_type_in_dict(d, _type, ignore_errors=False, numeric_behaviour='sum', lists_unique=False, lists_sort=False):
+def merge_all_values_of_specific_type_in_dict(d, _type, ignore_errors=False, numeric_behaviour='sum', lists_unique=False, lists_sort=False) -> dict | list:
     if _type is dict:
         merged = {}
     elif _type is list:
         merged = []
     else:
-        NotImplementedError(f'Not implemented merge for type <{_type}>.')
+        raise NotImplementedError(f'Not implemented merge for type <{_type}>.')
     for value in d.values():
         if type(value) is _type:
             if _type is dict:
@@ -217,7 +214,7 @@ def get_all_values_of_specific_types(d, types):
     return list(filter(lambda v: type(v) in types, d.values()))
 
 
-def apply_function_to_all_values_of_type(d, _type, f, recursive=True):
+def apply_function_to_all_values_of_type(d, _type, f, recursive=True) -> dict:
     for key, value in d.items():
         if type(value) is _type:
             d[key] = f(value)

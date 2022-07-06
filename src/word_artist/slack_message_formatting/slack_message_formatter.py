@@ -18,7 +18,7 @@ class SlackMessageFormatter:
     def __init__(self):
         self.__load_message_template()
 
-    def compute(self, img_url: str, text: str | None = None):
+    def compute(self, img_url: str, text: str | None = None) -> dict:
         msg = None
         template = self.__template
         msg = apply_function_to_all_values_of_type(
@@ -26,7 +26,7 @@ class SlackMessageFormatter:
         return msg
 
     # Private:
-    def __load_message_template(self):
+    def __load_message_template(self) -> None:
         filepath = self.__template_filepath
         template = load_if_json(filepath)
         self.__template = template

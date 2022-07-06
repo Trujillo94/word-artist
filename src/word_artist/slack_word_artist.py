@@ -13,14 +13,14 @@ class SlackWordArtist:
     def __init__(self):
         pass
 
-    def run(self, text: str, style: str | None = None):
+    def run(self, text: str, style: str | None = None) -> dict:
         self.__generate_image(text, style=style)
         self.__upload_image()
         slack_msg = self.__generate_slack_message()
         return slack_msg
 
     # Private:
-    def __generate_image(self, text: str, style: str | None):
+    def __generate_image(self, text: str, style: str | None) -> None:
         # img_filepath, style = WordArtist().compute(text, style=style)
         img_filepath = 'media/wordartist_scheme.png'
         style = 'hehe'
@@ -28,7 +28,7 @@ class SlackWordArtist:
         self.__text = text
         self.__style = style
 
-    def __upload_image(self):
+    def __upload_image(self) -> None:
         img_filepath = self.__img_filepath
         style = self.__style
         text = self.__text
@@ -37,13 +37,13 @@ class SlackWordArtist:
                                           bucket_route, extra_args={'ACL': 'public-read'})
         self.__img_url = img_url
 
-    def __generate_slack_message(self):
+    def __generate_slack_message(self) -> dict:
         img_url = self.__img_url
         text = self.__text
         msg = SlackMessageFormatter().compute(img_url, text=text)
         return msg
 
-    def __compute_bucket_route(self, text: str, style: str, filepath: str):
+    def __compute_bucket_route(self, text: str, style: str, filepath: str) -> str:
         ext = get_extension(filepath)
         bucket_route = convert_to_kebab_case(f'{text}-{style}{ext}')
         return bucket_route

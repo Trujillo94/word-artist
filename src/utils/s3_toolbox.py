@@ -9,11 +9,11 @@ def download(bucket_route: str, local_route: str):
     client = connect()
     try:
         client.download_file(BUCKET_NAME, bucket_route, local_route)
-    except Exception as exception:
-        msg = str(exception)
+    except Exception as e:
+        msg = str(e)
         if msg == 'An error occurred (404) when calling the HeadObject operation: Not Found':
             msg = "Error[404] - File not found in S3 bucket."
-        raise Exception(msg) from exception
+        raise Exception(msg) from e
 
 
 def upload(local_route: str, bucket_route: str, extra_args={}):
