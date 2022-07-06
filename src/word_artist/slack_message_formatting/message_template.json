@@ -10,7 +10,7 @@
             "text": "{text}",
             "emoji": true
           },
-          "image_url": "https://s3-eu-west-3.amazonaws.com/word-artist-prod/dewdew-hehe.png",
+          "image_url": "{img_url}",
           "alt_text": "{text}"
         },
         {
@@ -23,7 +23,7 @@
                 "text": "Send",
                 "emoji": true
               },
-              "value": "send",
+              "value": "send:{img_url}",
               "action_id": "send",
               "style": "primary"
             },
@@ -34,8 +34,8 @@
                 "text": "Change style",
                 "emoji": true
               },
-              "value": "change_style",
-              "action_id": "change_style"
+              "value": "again",
+              "action_id": "again"
             },
             {
               "type": "button",

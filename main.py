@@ -17,11 +17,22 @@ def handler(event: dict, context: dict) -> dict:
         slack_msg = SlackWordArtist().run(text, style=style)
     elif 'payload' in event:
         payload = event['payload']
+        action = payload['actions'][0]
         channel_id = payload['channel']['id']
-        text = payload['actions'][0]['value']
+        text = action['value']
         text = text.split('send:')[-1]
         user_id = payload['user']['id']
-        SlackWrapper().send_message(channel_id, text, user_id=user_id)
+        match action['id']:
+            case 'send':
+                SlackWrapper().send_message(channel_id, text, user_id=user_id)
+            case 'cancel':
+                raise NotImplementedError
+            case 'again':
+                raise NotImplementedError
+            case 'donate':
+                raise NotImplementedError
+            case _:
+                raise NotImplementedError
     else:
         raise Exception(f'Invalid event. Event: <{event}>')
     logger.info("Successful execution")
