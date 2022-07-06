@@ -41,7 +41,7 @@
           "text": "Send",
           "emoji": true
         },
-        "value": "send",
+        "value": "https://s3-eu-west-3.amazonaws.com/word-artist-prod/dewdew-hehe.png",
         "type": "button",
         "action_ts": "1656515273.795950"
       }

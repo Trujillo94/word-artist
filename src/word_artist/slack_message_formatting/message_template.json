@@ -23,7 +23,7 @@
                 "text": "Send",
                 "emoji": true
               },
-              "value": "send:{img_url}",
+              "value": "{img_url}",
               "action_id": "send",
               "style": "primary"
             },
