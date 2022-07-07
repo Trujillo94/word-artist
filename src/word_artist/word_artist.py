@@ -11,7 +11,7 @@ class WordArtist:
                 'green-marble', 'marble-slab', 'gray-block', 'up', 'red-blue', 'aqua', 'italic-outline']
 
     # Public:
-    def compute(self, text: str, style: str | None = None):
+    def compute(self, text: str, style: str | None = None) -> tuple[str, str]:
         check_type(text, str)
         check_type(style, [str, None])
         if style is None:
@@ -25,10 +25,10 @@ class WordArtist:
         return img_filepath, style
 
         # Private:
-    def __download_word_art_by_makeartword(self, text: str, style: str):
+    def __download_word_art_by_makeartword(self, text: str, style: str) -> str:
         return MakeArtWordCrawler().compute(text, style)
 
-    def __get_random_style(self):
+    def __get_random_style(self) -> str:
         styles = self.__styles
         style = choice(styles)
         return style
