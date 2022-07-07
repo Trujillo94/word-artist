@@ -1,5 +1,6 @@
 import string
 import unicodedata
+from typing import Any
 
 import validators
 from src.utils.regex_toolbox import is_separator, replace_regex
@@ -83,7 +84,7 @@ def ends_with_separator(s: str) -> bool:
         return False
 
 
-def is_url(s: str) -> bool:
+def is_url(s: Any) -> bool:
     return not not validators.url(s)
 
 
