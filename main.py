@@ -25,7 +25,7 @@ def handler(event: dict, context: dict) -> dict:
         channel_id = payload['channel']['id']
         user_id = payload['user']['id']
         body = None
-        match action['id']:
+        match action['action_id']:
             case 'send':
                 # SlackWrapper().send_message(channel_id, text, user_id=user_id)
                 body = {'text': value}
