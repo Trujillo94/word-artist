@@ -1,6 +1,10 @@
-import os
 import json
 import logging
+import os
+from time import sleep
+from typing import Any, Callable
+
+from src.utils.logging_toolbox import log_warning
 
 logger = logging.getLogger("Toolbox")
 
@@ -30,3 +34,21 @@ def load_json_file(json_file_path):
         content = json.load(json_file)
 
     return content
+
+
+def retry_function(f: Callable, *args, max_attempts: int = 20, wait_time: int = 3, ignored_exceptions: list[Exception] = list(), **kwargs) -> Any:
+    for i in range(0, max_attempts):
+        try:
+            return f(*args, **kwargs)
+        except Exception as e:
+            for ignored_exception in ignored_exceptions:
+                if type(e) is ignored_exception:
+                    raise e
+            log_warning(
+                f'Failed execution of {f.__qualname__}. Attempt: {i+1}/{max_attempts}. DETAILS: <{str(e)}>')
+            if i+1 < max_attempts:
+                sleep(wait_time)
+            else:
+                raise e
+    raise Exception(
+        f"Failed to execute {f.__qualname__} after {max_attempts} attempts.")

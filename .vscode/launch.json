@@ -12,6 +12,25 @@
             "env": {
                 "PYTHONPATH": "${workspaceRoot}"
             }
+        }, {
+            "name": "Test WordArtist",
+            "type": "python",
+            "request": "launch",
+            "program": "tests/test_word_artist.py",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceRoot}"
+            }
+        },
+        {
+            "name": "Test Selenium",
+            "type": "python",
+            "request": "launch",
+            "program": "tests/test_selenium.py",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceRoot}"
+            }
         },
         {
             "name": "Test Slack",

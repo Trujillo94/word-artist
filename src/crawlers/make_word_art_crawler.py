@@ -1,11 +1,11 @@
 from selenium.webdriver.common.keys import Keys
 from src.utils.files_management_toolbox import get_extension
-from src.utils.selenium_toolbox import AbstractSeleniumCrawler
+from src.utils.selenium_toolbox import BaseSeleniumCrawler
 from src.utils.string_toolbox import convert_to_kebab_case
 from src.utils.vartypes_toolbox import check_type
 
 
-class MakeArtWordCrawler(AbstractSeleniumCrawler):
+class MakeArtWordCrawler(BaseSeleniumCrawler):
 
     _url = 'https://www.makewordart.com/'
 
@@ -32,7 +32,7 @@ class MakeArtWordCrawler(AbstractSeleniumCrawler):
     # Private:
     def __click_style(self):
         style = self.__style
-        styles_div = self.get_element_by_class_name(style)
+        styles_div = self.find_element(style)
         style_element = styles_div.find_element_by_xpath(
             f'//div[contains(@class, "sprite {style}")]')
         style_element.click()
