@@ -165,3 +165,6 @@ logs/*.log
 # Terraform
 .terraform.*
 .terraform/*
+
+# Webdrivers
+drivers/*
