@@ -1,3 +1,4 @@
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from src.utils.files_management_toolbox import get_extension
 from src.utils.selenium_toolbox import BaseSeleniumCrawler
@@ -36,18 +37,18 @@ class MakeArtWordCrawler(BaseSeleniumCrawler):
     # Private:
     def __click_style(self):
         style = self.__style
-        styles_div = self.find_element(style)
-        style_element = styles_div.find_element_by_xpath(
-            f'//div[contains(@class, "sprite {style}")]')
+        styles_div = self.find_element(By.CLASS_NAME, style)
+        style_element = styles_div.find_element(
+            By.XPATH, f'//div[contains(@class, "sprite {style}")]')
         style_element.click()
 
     def __type_text(self):
         text = self.__text
-        text_input = self.get_element_by_id('text-input')
+        text_input = self.find_element(By.ID, 'text-input')
         text_input.send_keys(text)
         text_input.send_keys(Keys.ENTER)
 
     def __download_image(self):
         xpath = f'//button [contains(text(), "Download")]'
-        download_button = self.get_element_by_xpath(xpath)
+        download_button = self.find_element(By.XPATH, xpath)
         download_button.click()
