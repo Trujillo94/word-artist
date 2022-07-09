@@ -10,6 +10,10 @@ class MakeArtWordCrawler(BaseSeleniumCrawler):
     _url = 'https://www.makewordart.com/'
 
     # Public:
+    def __init__(self, *args, **kwargs):
+        url = self._url
+        super().__init__(url, *args, **kwargs)
+
     def compute(self, text: str, style: str):
         check_type(text, str)
         check_type(style, [str, None])
