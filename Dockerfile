@@ -1,5 +1,5 @@
 # Define function directory
-ARG FUNCTION_DIR="/function"
+ARG FUNCTION_DIR="/app"
 
 #FROM 082206641446.dkr.ecr.eu-west-3.amazonaws.com/winnow-video-converter-setup:latest
 FROM python:3.10-slim

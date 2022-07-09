@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    container_name: word-artist-prod
+    image: word-artist-prod
+    command: pytest
+    # command: pytest -s -v --cov=. --cov-report=html --cov-config=.coveragerc
+    volumes:
+      - .:/app
