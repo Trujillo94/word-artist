@@ -122,6 +122,9 @@ resource "aws_api_gateway_deployment" "apideploy" {
   variables = {
     deployed_at = var.deployed_at
   }
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_api_gateway_stage" "api-stage" {
