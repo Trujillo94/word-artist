@@ -36,6 +36,18 @@ def test_send_button():
     response = handler(event, {})
 
 
+def test_asynchronous_generation():
+    event = {
+        "data": {
+            "text": "Unit Testing: *asynchronous_generation*",
+            "style": None
+        },
+        "type": "ASYNC_GENERATION"
+    }
+    response = handler(event, {})
+    assert_slack_message_format(response)
+
+
 def assert_slack_message_format(msg):
     if type(msg) is dict:
         if 'attachments' in msg:
@@ -45,5 +57,6 @@ def assert_slack_message_format(msg):
 
 if __name__ == "__main__":
     test_text_command()
-    test_send_text_command_response()
-    test_send_button()
+    # test_send_text_command_response()
+    # test_send_button()
+    # test_asynchronous_generation()

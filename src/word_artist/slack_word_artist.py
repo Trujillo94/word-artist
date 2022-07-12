@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from src.config.aws import BUCKET_NAME
 from src.utils.files_management_toolbox import get_extension
 from src.utils.string_toolbox import convert_to_kebab_case
@@ -7,17 +9,32 @@ from src.word_artist.word_artist import WordArtist
 from src.wrappers.aws.s3 import S3Wrapper
 
 
+@dataclass
 class SlackWordArtist:
 
-    # Public:
-    def __init__(self):
-        pass
+    loading_text: str = 'Generating a fabolous WordArt...'
+    loading_img_url: str = 'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif'
 
+    # Public:
     def run(self, text: str, style: str | None = None) -> dict:
         self.__generate_image(text, style=style)
         self.__upload_image()
         slack_msg = self.__generate_slack_message()
         return slack_msg
+
+    def compute_loading_message(self) -> dict:
+        text = self.loading_text
+        img_url = self.loading_img_url
+        msg = {
+            "blocks": [
+                {
+                    "type": "image",
+                    "alt_text": text,
+                    "image_url": img_url
+                }
+            ]
+        }
+        return msg
 
     # Private:
     def __generate_image(self, text: str, style: str | None) -> None:
