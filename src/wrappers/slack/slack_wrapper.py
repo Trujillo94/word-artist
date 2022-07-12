@@ -50,3 +50,16 @@ class SlackWrapper:
         else:
             data = list(profile.values())
         return tuple(data)
+
+    @SlackException.error_handling
+    def get_image_block(self, image_url: str, text: str = "A wonderful piece of WordArt.") -> dict:
+        msg = {
+            "blocks": [
+                {
+                    "type": "image",
+                    "image_url": f"{image_url}",
+                    "alt_text": f"{text}"
+                }
+            ]
+        }
+        return msg
