@@ -44,7 +44,11 @@ def handler(event: dict, context: dict) -> dict:
             match action['action_id']:
                 case 'send':
                     # SlackWrapper().send_message(channel_id, text, user_id=user_id)
-                    body = {'text': value}
+                    body = {
+                        'text': value,
+                        "delete_original": True,
+                        "response_type": "in_channel"
+                    }
                 case 'cancel':
                     body = {"delete_original": True}
                 case 'again':
