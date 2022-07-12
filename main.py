@@ -40,13 +40,13 @@ def handler(event: dict, context: dict) -> dict:
             response_url = payload['response_url']
             # channel_id = payload['channel']['id']
             # user_id = payload['user']['id']
-            image_block = SlackWrapper().get_image_block(value)
+            image_blocks = SlackWrapper().get_image_blocks(value)
             body = None
             match action['action_id']:
                 case 'send':
                     # SlackWrapper().send_message(channel_id, text, user_id=user_id)
                     body = {
-                        'blocks': image_block,
+                        'text': str(image_blocks),
                         "delete_original": True,
                         "response_type": "in_channel"
                     }
