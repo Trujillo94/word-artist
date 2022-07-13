@@ -97,7 +97,7 @@ resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment-lambdab
 }
 
 
-resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment-lambdabasicexecutionrole" {
+resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment-lambdarole" {
   role       = aws_iam_role.lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaRole"
 }
