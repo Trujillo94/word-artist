@@ -1,8 +1,10 @@
+import json
 import logging
-from typing import Dict, Optional, Sequence, Union
+from typing import Any, Dict, Optional, Sequence, Union
 
 from slack_sdk.models.blocks import Block
-from src.utils.dict_toolbox import get_values_from_dict_by_keys
+from src.utils.dict_toolbox import (get_values_from_dict_by_keys,
+                                    get_values_from_dict_by_subkey)
 from src.wrappers.slack.connect import slack_client
 from src.wrappers.slack.exception import SlackException
 
@@ -63,3 +65,14 @@ class SlackWrapper:
             }
         ]
         return msg
+
+    @SlackException.error_handling
+    def get_blocks_from_message(self, msg: Any) -> Any:
+        if type(msg) is str:
+            msg = json.loads(msg)
+        if type(msg) is dict:
+            return msg.get('blocks')
+        elif type(msg) is list:
+            return msg
+        else:
+            raise Exception(f'Invalid message format. Message: <{msg}>')

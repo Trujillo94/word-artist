@@ -12,7 +12,7 @@ from src.wrappers.aws.s3 import S3Wrapper
 @dataclass
 class SlackWordArtist:
 
-    loading_text: str = 'Generating a fabolous WordArt...'
+    loading_text: str = 'Generating a fabulous WordArt...'
     loading_img_url: str = 'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif'
     message_template_filepath: str = 'src/word_artist/slack_message_formatting/slack_message_template.json'
 

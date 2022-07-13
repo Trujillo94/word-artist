@@ -23,10 +23,10 @@ def test_send_text_command_response():
         "style": None
     }
     response = handler(event, {})
+    blocks = SlackWrapper().get_blocks_from_message(response)
     channel_id = load_env_var('SLACK_TESTING_CHANNEL_ID') or ''
     user_id = load_env_var('SLACK_TESTING_USER_ID') or ''
-    response = json.dumps(response)
-    SlackWrapper().send_message(channel_id, response, user_id=user_id)
+    SlackWrapper().send_message(channel_id, blocks=blocks, user_id=user_id)
 
 
 def test_send_button():
@@ -56,7 +56,7 @@ def assert_slack_message_format(msg):
 
 
 if __name__ == "__main__":
-    test_text_command()
-    # test_send_text_command_response()
+    # test_text_command()
+    test_send_text_command_response()
     # test_send_button()
     # test_asynchronous_generation()
