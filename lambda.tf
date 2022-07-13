@@ -96,6 +96,12 @@ resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment-lambdab
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+
+resource "aws_iam_role_policy_attachment" "lambda-role-policy-attachment-lambdabasicexecutionrole" {
+  role       = aws_iam_role.lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaRole"
+}
+
 resource "aws_lambda_function" "lambda" {
   depends_on = [
     null_resource.ecr_image
