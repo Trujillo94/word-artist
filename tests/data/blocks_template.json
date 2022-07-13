@@ -1,0 +1,12 @@
+[
+  {
+    "type": "image",
+    "title": {
+      "type": "plain_text",
+      "text": "{text}",
+      "emoji": true
+    },
+    "image_url": "{img_url}",
+    "alt_text": "{text}"
+  }
+]

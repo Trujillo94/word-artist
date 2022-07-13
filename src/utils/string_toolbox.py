@@ -185,3 +185,29 @@ def get_class_name(obj: object) -> str:
     name = name.split("'>")[0]
     name = name.split('.')[-1]
     return name
+
+
+def get_substring_between_brackets(s: str) -> list:
+    return get_substrings_between_separators(s, '(', ')')
+
+
+def get_substrings_between_curly_braces(s: str) -> list:
+    return get_substrings_between_separators(s, '{', '}')
+
+
+def get_substrings_between_separators(s: str, opening_separator: str, closing_separator) -> list:
+    substrings = []
+    while True:
+        start = s.find(opening_separator)
+        if start == -1:
+            break
+        end = s.find(closing_separator, start + 1)
+        if end == -1:
+            break
+        substrings.append(s[start + 1:end])
+        s = s[end + 1:]
+    return substrings
+    # a = s.split(opening_separator)[1]
+    # substring = a.split(closing_separator)[0]
+    # substrings.append(substring)
+    # a = a.split(closing_separator)[1]

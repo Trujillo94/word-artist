@@ -1,7 +1,7 @@
 import os
 
 from src.utils.dict_toolbox import apply_function_to_all_values_of_type
-from src.utils.json_toolbox import load_if_json
+from src.utils.json_toolbox import format_json_template, load_if_json
 
 BUCKET_FOLDER_ROUTE = os.getenv('BUCKET_FOLDER_ROUTE')
 BUCKET_URL = os.getenv('BUCKET_URL')
@@ -11,18 +11,24 @@ severity_whitelist = ['unknown', 'low']
 
 class SlackMessageFormatter:
 
-    __template_filepath = 'src/word_artist/slack_message_formatting/message_template.json'
-
     # Public:
+    def __init__(self, template_filepath: str) -> None:
+        self.template_filepath = template_filepath
 
-    def __init__(self):
+    @property
+    def template_filepath(self) -> str:
+        return self.__template_filepath
+
+    @template_filepath.setter
+    def template_filepath(self, filepath: str) -> None:
+        self.__template_filepath = filepath
         self.__load_message_template()
 
-    def compute(self, img_url: str, text: str | None = None) -> dict:
+    def compute(self, values) -> dict:
         msg = None
         template = self.__template
         msg = apply_function_to_all_values_of_type(
-            template, str, lambda s: s.format(img_url=img_url, text=text))
+            template, str, lambda s: format_json_template(s, values, ignore_missing_fields=False))
         return msg
 
     # Private:

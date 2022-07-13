@@ -14,6 +14,7 @@ class SlackWordArtist:
 
     loading_text: str = 'Generating a fabolous WordArt...'
     loading_img_url: str = 'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif'
+    message_template_filepath: str = 'src/word_artist/slack_message_formatting/slack_message_template.json'
 
     # Public:
     def run(self, text: str, style: str | None = None) -> dict:
@@ -57,7 +58,12 @@ class SlackWordArtist:
     def __generate_slack_message(self) -> dict:
         img_url = self.__img_url
         text = self.__text
-        msg = SlackMessageFormatter().compute(img_url, text=text)
+        template_filepath = self.message_template_filepath
+        fields = {
+            'img_url': img_url,
+            'text': text
+        }
+        msg = SlackMessageFormatter(template_filepath).compute(fields)
         return msg
 
     def __compute_bucket_route(self, text: str, style: str, filepath: str) -> str:

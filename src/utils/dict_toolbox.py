@@ -215,6 +215,11 @@ def get_all_values_of_specific_types(d, types):
 
 
 def apply_function_to_all_values_of_type(d, _type, f, recursive=True) -> dict:
+    if type(d) is not dict:
+        d = {'_': d}
+        not_dict = True
+    else:
+        not_dict = False
     for key, value in d.items():
         if type(value) is _type:
             d[key] = f(value)
@@ -225,6 +230,8 @@ def apply_function_to_all_values_of_type(d, _type, f, recursive=True) -> dict:
             elif type(value) is list or type(value) is tuple:
                 d[key] = transform_list(value, lambda e: apply_function_to_all_values_of_type(
                     e, _type, f, recursive=recursive))
+    if not_dict and '_' in d:
+        d = d['_']
     return d
 
 

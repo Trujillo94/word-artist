@@ -1,5 +1,7 @@
 import logging
+from typing import Dict, Optional, Sequence, Union
 
+from slack_sdk.models.blocks import Block
 from src.utils.dict_toolbox import get_values_from_dict_by_keys
 from src.wrappers.slack.connect import slack_client
 from src.wrappers.slack.exception import SlackException
@@ -18,14 +20,14 @@ class SlackWrapper:
         return self.__client.api_test()
 
     @SlackException.error_handling
-    def send_message(self, channel_id: str, text: str, user_id: str | None = None, name: str | None = None, icon_url: str | None = None) -> None:
+    def send_message(self, channel_id: str, text: Optional[str] = None, blocks: Optional[Sequence[Union[Dict, Block]]] = None, user_id: Optional[str] = None, name: Optional[str] = None, icon_url: Optional[str] = None) -> None:
         if user_id is not None:
             real_name, image = self.get_profile_fields(
                 user_id, fields=['real_name', 'image_512'])
             name = real_name if name is None else name
             icon_url = image if icon_url is None else icon_url
         self.__client.chat_postMessage(
-            channel=channel_id, text=text, username=name, icon_url=icon_url)
+            channel=channel_id, text=text, blocks=blocks, username=name, icon_url=icon_url)
 
     @SlackException.error_handling
     def get_user_info(self, user_id: str) -> dict:
@@ -52,14 +54,12 @@ class SlackWrapper:
         return tuple(data)
 
     @SlackException.error_handling
-    def get_image_blocks(self, image_url: str, text: str = "A wonderful piece of WordArt.") -> dict:
-        msg = {
-            "blocks": [
-                {
-                    "type": "image",
-                    "image_url": f"{image_url}",
-                    "alt_text": f"{text}"
-                }
-            ]
-        }
+    def get_image_blocks(self, image_url: str, text: str = "A wonderful piece of WordArt.") -> dict | list:
+        msg = [
+            {
+                "type": "image",
+                "image_url": f"{image_url}",
+                "alt_text": f"{text}"
+            }
+        ]
         return msg
