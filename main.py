@@ -80,7 +80,7 @@ def handler(event: dict, context: dict) -> dict:
                     # SlackWrapper().send_message(channel_id, text, user_id=user_id)
                     body = {
                         'text': 'Your WordArt has been sent!',
-                        'blocks': image_blocks,
+                        'blocks': str(image_blocks),
                         "delete_original": True,
                         "response_type": "in_channel"
                     }
