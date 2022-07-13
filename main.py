@@ -62,6 +62,7 @@ def handler(event: dict, context: dict) -> dict:
             style = data.get('style', None)
             body = SlackWordArtist().run(text, style=style)
             body['replace_original'] = True
+            body['delete_original'] = True
             body['response_type'] = 'ephimeral'
             response = requests.post(response_url, json=body)
             logger.info(f'Slack response: {response}')
