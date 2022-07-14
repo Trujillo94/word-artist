@@ -1,5 +1,6 @@
 from asyncio.log import logger
 
+import pytest
 from genericpath import exists
 from pyvirtualdisplay.display import Display
 from selenium.webdriver.common.by import By
@@ -33,6 +34,7 @@ def test_headless_firefox_get_driver() -> None:
         TEST_URL, browser=Browser.FIREFOX, page_timeout=PAGE_TIMEOUT, headless=True))
 
 
+@pytest.mark.skip(reason='Work in progress')
 def test_chrome_get_element_by_class() -> None:
     crawler = BaseSeleniumCrawler(
         TEST_URL, browser_type=Browser.CHROME, page_timeout=PAGE_TIMEOUT, retry_wait_time=RETRY_WAIT_TIME, headless=False)
@@ -41,6 +43,7 @@ def test_chrome_get_element_by_class() -> None:
     assert type(element) is WebElement
 
 
+@pytest.mark.skip(reason='Work in progress')
 def assert_webdriver(driver_tuple: tuple) -> None:
     driver, display = driver_tuple
     assert isinstance(driver, WebDriver)
