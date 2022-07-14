@@ -2,6 +2,7 @@ import inspect
 import json
 
 from main import handler
+from slack_sdk.models.basic_objects import JsonObject
 from src.utils.toolbox import load_env_var, load_json_file
 from src.wrappers.slack.slack_wrapper import SlackWrapper
 
@@ -45,18 +46,29 @@ def test_asynchronous_generation():
         "type": "ASYNC_GENERATION"
     }
     response = handler(event, {})
+    assert type(response) is dict
     assert_slack_message_format(response)
+    status = response.get('status')
+    assert status == 'success'
+
+
+def test_error_reporting():
+    event = {
+        "type": "HEHEHEHEHHEE"
+    }
+    response = handler(event, {})
+    assert type(response) is dict
+    assert_slack_message_format(response)
+    status = response.get('status')
+    assert status == 'error'
 
 
 def assert_slack_message_format(msg):
-    if type(msg) is dict:
-        if 'attachments' in msg:
-            return
-    assert False
+    JsonObject.validate_json(msg)
 
 
 if __name__ == "__main__":
     # test_text_command()
-    test_send_text_command_response()
+    # test_send_text_command_response()
     # test_send_button()
-    # test_asynchronous_generation()
+    test_asynchronous_generation()
