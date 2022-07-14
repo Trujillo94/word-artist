@@ -6,6 +6,8 @@ from slack_sdk.models.basic_objects import JsonObject
 from src.utils.toolbox import load_env_var, load_json_file
 from src.wrappers.slack.slack_wrapper import SlackWrapper
 
+MOCK_RESPONSE_URL = 'https://github.com/Trujillo94/word-artist'
+
 
 def test_text_command():
     function_name = inspect.currentframe().f_code.co_name
@@ -24,10 +26,11 @@ def test_send_text_command_response():
         "style": None
     }
     response = handler(event, {})
+    text = response.get('text')
     blocks = SlackWrapper().get_blocks_from_message(response)
     channel_id = load_env_var('SLACK_TESTING_CHANNEL_ID') or ''
     user_id = load_env_var('SLACK_TESTING_USER_ID') or ''
-    SlackWrapper().send_message(channel_id, blocks=blocks, user_id=user_id)
+    SlackWrapper().send_message(channel_id, text=text, blocks=blocks, user_id=user_id)
 
 
 def test_send_button():
@@ -39,9 +42,10 @@ def test_send_button():
 
 def test_asynchronous_generation():
     event = {
-        "data": {
+        "payload": {
             "text": "Unit Testing: *asynchronous_generation*",
-            "style": None
+            "style": None,
+            "response_url": MOCK_RESPONSE_URL
         },
         "type": "ASYNC_GENERATION"
     }
@@ -49,18 +53,25 @@ def test_asynchronous_generation():
     assert type(response) is dict
     assert_slack_message_format(response)
     status = response.get('status')
-    assert status == 'success'
+    if status != 'success':
+        raise Exception(f'Error: <{response}>')
 
 
 def test_error_reporting():
     event = {
-        "type": "HEHEHEHEHHEE"
+        "payload": {
+            "response_url": MOCK_RESPONSE_URL,
+            "error": "Unit Testing: *error_reporting*"
+        },
+        "type": "ASYNC_GENERATION"
     }
     response = handler(event, {})
     assert type(response) is dict
     assert_slack_message_format(response)
     status = response.get('status')
-    assert status == 'error'
+    if status != 'error':
+        raise Exception(
+            f'An Exception should be raised! Response: <{response}>')
 
 
 def assert_slack_message_format(msg):

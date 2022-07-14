@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from src.config.aws import BUCKET_NAME
 from src.utils.files_management_toolbox import get_extension
 from src.utils.string_toolbox import convert_to_kebab_case
+from src.utils.toolbox import load_env_var
 from src.word_artist.slack_message_formatting.slack_message_formatter import \
     SlackMessageFormatter
-from src.word_artist.word_artist import WordArtist
 from src.wrappers.aws.s3 import S3Wrapper
 
 
@@ -14,6 +14,8 @@ class SlackWordArtist:
 
     loading_text: str = 'Generating a fabulous WordArt...'
     loading_img_url: str = 'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif'
+    error_text = 'Oops! Something went wrong.'
+    error_img_url = 'https://media3.giphy.com/media/YDj8Ot6mIbJYs/giphy.gif?cid=ecf05e47fn4ptkyy52ocl3a3h305wyjawoa82snb48ad47br&rid=giphy.gif&ct=g'
     message_template_filepath: str = 'src/word_artist/slack_message_formatting/message_template.json'
 
     # Public:
@@ -35,6 +37,27 @@ class SlackWordArtist:
                 }
             ]
         }
+        return msg
+
+    def compute_error_message(self, e: Exception) -> dict:
+        msg = {
+            "blocks": [
+                {
+                    "type": "image",
+                    "alt_text": self.error_text,
+                    "image_url": self.error_img_url
+                }
+            ]
+        }
+        if load_env_var('ENV') == 'dev':
+            text = str(e)
+            msg['blocks'].append({
+                "type": "section",
+                "text": {
+                        "type": "mrkdwn",
+                        "text": text
+                }
+            })
         return msg
 
     # Private:

@@ -1,5 +1,6 @@
 import logging
 from enum import Enum, auto
+from typing import Any
 
 import requests
 
@@ -43,73 +44,112 @@ def call_async_generation(event: dict) -> None:
 
 
 def handler_logic(event: dict) -> dict | None:
-    body = {}
-    response_url = None
+    if type_of_event(event) == Event.TEXT_COMMAND:
+        return handle_text_command(event)
+    else:
+        return handle_interactivity(event)
+
+
+def handle_text_command(event: dict) -> dict:
+    try:
+        event = {
+            "payload": event,
+            "type": "ASYNC_GENERATION"
+        }
+        response = call_async_generation(event)
+        logger.info(f'Async generation response: {response}')
+        return SlackWordArtist().compute_loading_message()
+    except Exception as e:
+        logger.error(f'Error: {e}')
+        return SlackWordArtist().compute_error_message(e)
+
+
+def handle_interactivity(event: dict) -> dict:
+    payload = event.get('payload')
+    if payload is None:
+        raise Exception(
+            f'Invalid event: missing <payload> field. Event: <{event}>')
+    response_url = payload.get('response_url')
+    if response_url is None:
+        raise Exception(
+            f'Invalid event: missing <response_url> field. Event: <{event}>')
+    body = None
     try:
         match type_of_event(event):
-            case Event.TEXT_COMMAND:
-                event = {
-                    "data": event,
-                    "type": "ASYNC_GENERATION"
-                }
-                response = call_async_generation(event)
-                return SlackWordArtist().compute_loading_message()
             case Event.ASYNC_GENERATION:
-                data = event['data']
-                response_url = data['response_url']
-                text = data['text']
-                style = data.get('style', None)
+                text = payload['text']
+                style = payload.get('style', None)
                 body = SlackWordArtist().run(text, style=style)
                 body['replace_original'] = True
                 # body['delete_original'] = True
                 body['response_type'] = 'ephimeral'
             case Event.BUTTON_ACTION:
-                payload = event['payload']
-                response_url = payload['response_url']
                 action = payload['actions'][0]
-                value = action['value']
-                # channel_id = payload['channel']['id']
-                # user_id = payload['user']['id']
-                image_blocks = SlackWrapper().get_image_blocks(value)
-                match action['action_id']:
-                    case 'send':
-                        # SlackWrapper().send_message(channel_id, text, user_id=user_id)
-                        body = {
-                            'text': 'Your WordArt has been sent!',
-                            'blocks': str(image_blocks),
-                            "delete_original": True,
-                            "response_type": "in_channel"
-                        }
-                    case 'cancel':
-                        body = {"delete_original": True}
-                    case 'again':
-                        style = None
-                        msg = SlackWordArtist().run(value, style=style)
-                        body = {
-                            "text": msg,
-                            "replace_original": True,
-                            "response_type": "ephemeral",
-                        }
-                    case 'donate':
-                        raise NotImplementedError
-                    case _:
-                        raise NotImplementedError
+                body = get_button_action_response(action)
             case _:
                 raise Exception(f'Invalid event. Event: <{event}>')
     except Exception as e:
-        body = {
-            'text': f'Error: {e}',
-            'blocks': str(SlackWrapper().get_image_blocks('error')),
-            # 'response_type': 'ephemeral',
-            "status": "error",
-        }
-        logger.error(f'Error: {e}')
+        body = handle_interactivity_error(e)
     finally:
-        if type(body) is dict and 'status' not in body:
-            body['status'] = 'success'
+        if type(body) is not dict:
+            e = Exception(f'Error: body is not a dict. Event: <{body}>')
+            body = handle_interactivity_error(e)
+        body = add_status_if_missing(body)
+        reply_to_slack(response_url, body)
+    return body
+
+
+def handle_interactivity_error(e: Exception) -> dict:
+    logger.error(f'Error: {e}')
+    body = {
+        'text': f'Error: {e}',
+        'blocks': str(SlackWrapper().get_image_blocks('error')),
+        "status": "error",
+    }
+    return body
+
+
+def get_button_action_response(action: dict) -> dict:
+    value = action.get('value')
+    if value is None:
+        raise Exception(
+            f'Invalid event: missing <value> field in <action> event field. Event: <{action}>')
+    match action['action_id']:
+        case 'send':
+            image_blocks = SlackWrapper().get_image_blocks(value)
+            body = {
+                'text': 'Your WordArt has been sent!',
+                'blocks': str(image_blocks),
+                "delete_original": True,
+                "response_type": "in_channel"
+            }
+        case 'cancel':
+            body = {"delete_original": True}
+        case 'again':
+            style = None
+            msg = SlackWordArtist().run(value, style=style)
+            body = {
+                "text": msg,
+                "replace_original": True,
+                "response_type": "ephemeral",
+            }
+        case 'donate':
+            raise NotImplementedError
+        case _:
+            raise NotImplementedError
+    return body
+
+
+def reply_to_slack(response_url: str, body: Any) -> None:
     if response_url:
         response = requests.post(response_url, json=body)
         logger.info(f'Slack response: {response}')
+
+
+def add_status_if_missing(body: dict) -> dict:
+    if type(body) is dict:
+        if 'status' not in body:
+            body['status'] = 'success'
     return body
 
 
