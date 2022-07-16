@@ -178,7 +178,7 @@ class BaseSeleniumCrawler:
         self._update_browser(v)
 
     def quit_webdriver(self):
-        logger.info('Quitting webdriver')
+        print('Quitting webdriver')
         try:
             self._display.stop()
         except Exception as e:

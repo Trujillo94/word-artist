@@ -36,7 +36,7 @@ class SlackInteractivityHandler:
                 body = self.__handle_interactivity_error(e)
             body = self.__add_status_if_missing(body)
             self.__reply_to_slack(body)
-        logger.info(f'Response body: {body}')
+        print(f'Response body: {body}')
         return body
 
     # Private:
@@ -109,7 +109,8 @@ class SlackInteractivityHandler:
     def __reply_to_slack(self, body: Any) -> None:
         response_url = self.__response_url
         response = requests.post(response_url, json=body)
-        logger.info(f'Slack response: {response}')
+        # check_response(response)
+        print(f'Slack response: {response}')
 
     def __add_status_if_missing(self, body: dict) -> dict:
         if type(body) is dict:

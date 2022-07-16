@@ -57,12 +57,19 @@ def test_send_button():
 
 def test_asynchronous_generation():
     event = {
-        "payload": {
-            "text": "Unit Testing: *asynchronous_generation*",
-            "style": None,
-            "response_url": MOCK_RESPONSE_URL
+        'payload': {
+            'text': 'Unit Testing: *test_text_command*',
+            'style': None,
+            'response_url': MOCK_RESPONSE_URL,
+            'token': 'I2qr45qIMQ9Hce8swoGrUbCc',
+            'team_id': 'T03HZL7AGSF',
+            'team_domain': 'slackappsdeve-kb84670',
+            'channel_id': 'C03HZLDDFPD',
+            'channel_name': 'development-of-slack-apps',
+            'user_id': 'U03HWRB6U5B',
+            'user_name': 'trujillo.oriol'
         },
-        "type": "ASYNC_GENERATION"
+        'type': 'ASYNC_GENERATION'
     }
     response = handler(event, {})
     assert type(response) is dict
@@ -94,7 +101,7 @@ def assert_slack_message_format(msg):
 
 
 if __name__ == "__main__":
-    test_text_command()
+    # test_text_command()
     # test_send_text_command_response()
     # test_send_button()
-    # test_asynchronous_generation()
+    test_asynchronous_generation()

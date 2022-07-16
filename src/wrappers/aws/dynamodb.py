@@ -15,7 +15,8 @@ class DynamoDBWrapper:
         Creates the DynamoDB boto3 resource with the DB URL set in the config
         """
         self.__session = boto3_session
-        self.__dynamodb = self.__session.resource("dynamodb", endpoint_url=DYNAMODB_ENDPOINT_URL)
+        self.__dynamodb = self.__session.resource(
+            "dynamodb", endpoint_url=DYNAMODB_ENDPOINT_URL)
 
     @AWSException.error_handling
     def create_item(self, table_name, item_data):
@@ -27,7 +28,7 @@ class DynamoDBWrapper:
         returns: The new item as a dict
         """
 
-        logger.info(f"Creating item in '{table_name}': '{item_data}'")
+        print(f"Creating item in '{table_name}': '{item_data}'")
 
         table = self.__dynamodb.table(table_name)
         response = table.put_item(Item=item_data)
@@ -45,7 +46,7 @@ class DynamoDBWrapper:
         returns: The item as a dict
         """
 
-        logger.info(f"Getting item '{table_name}'-'{item_key}'")
+        print(f"Getting item '{table_name}'-'{item_key}'")
 
         table = self.__dynamodb.table(table_name)
         response = table.get_item(Key=item_key)
@@ -64,16 +65,19 @@ class DynamoDBWrapper:
         returns: The item with the modified data
         """
 
-        logger.info(f"Updating item '{table_name}'-'{item_key}' attributes: '{attributes}'")
+        print(
+            f"Updating item '{table_name}'-'{item_key}' attributes: '{attributes}'")
 
         # Build the UpdateExpression string, more info in:
         # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html
         # UpdateExpression string format: 'SET #<attribute_name> = :<attribute_name>_value'
-        update_expression = "SET {}".format(",".join(f"#{attribute} = :{attribute}_value" for attribute in attributes))
+        update_expression = "SET {}".format(
+            ",".join(f"#{attribute} = :{attribute}_value" for attribute in attributes))
 
         # <value_name> definitions
         # Dict with key = ':<attribute_name>_value' and value = '<attribute_value>'
-        expression_attribute_values = {f":{attribute}_value": value for attribute, value in attributes.items()}
+        expression_attribute_values = {
+            f":{attribute}_value": value for attribute, value in attributes.items()}
 
         table = self.__dynamodb.Table(table_name)
         response = table.update_item(

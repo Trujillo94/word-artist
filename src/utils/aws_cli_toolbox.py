@@ -11,7 +11,7 @@ from src.wrappers.aws.connect import boto3_session
 from src.wrappers.aws.exception import AWSException
 
 
-def invoke_lambda(function_name: str, payload: dict, read_timeout: int = 60, connect_timeout: int = 60, max_attempts=3, max_idle_attempts=30, wait_time=3, synchronously: bool = True) -> dict | None:
+def invoke_lambda(function_name: str, payload: dict, read_timeout: int = 60, connect_timeout: int = 60, max_attempts=3, max_idle_attempts=30, wait_time=3, synchronously: bool = True) -> dict:
     try:
         return execute_lambda_invocation(function_name, payload, read_timeout=read_timeout, connect_timeout=connect_timeout, max_attempts=max_attempts, synchronously=synchronously)
     except ClientError as e:

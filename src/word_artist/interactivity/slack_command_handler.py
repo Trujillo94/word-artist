@@ -27,7 +27,7 @@ class SlackCommandHandler:
     def run(self, event: dict) -> dict | None:
         try:
             response = self.__call_async_generation(event)
-            logger.info(f'Async generation response: {response}')
+            print(f'Async generation response: {response}')
             return self.generate_loading_message()
         except Exception as e:
             logger.error(f'Error: {e}')
@@ -74,15 +74,16 @@ class SlackCommandHandler:
         return msg
 
     # Private:
-    def __call_async_generation(self, event: dict) -> None:
+    def __call_async_generation(self, event: dict) -> dict:
         event = {
             "payload": event,
             "type": "ASYNC_GENERATION"
         }
         if type(LAMBDA_NAME) is str:
             response = invoke_lambda(LAMBDA_NAME, event, synchronously=False)
-            logger.info(f'Async generation response: {response}')
+            print(f'Async generation response: {response}')
             check_async_lambda_response(response)
+            return response
         else:
             raise Exception(f'Invalid lambda name: <{LAMBDA_NAME}>')
 

@@ -34,7 +34,7 @@ class S3Wrapper:
         """
         s3_client = self.__s3_client
 
-        logger.info(f"Getting S3 object - Bucket: '{bucket}' - Key: '{key}'")
+        print(f"Getting S3 object - Bucket: '{bucket}' - Key: '{key}'")
         s3_object = s3_client.get_object(Bucket=bucket, Key=key)
         logger.debug(f"Boto3 response: '{s3_object}'")
 

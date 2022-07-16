@@ -7,10 +7,10 @@ logger = logging.getLogger("main")
 
 def handler(event: dict, context: dict) -> dict | None:
     # print(event)
-    logger.info(f'event: {event}')
-    logger.info(f'context: {context}')
+    print(f'event: {event}')
+    print(f'context: {context}')
     response = SlackWordArtist().run(event)
-    logger.info("Successful execution")
+    print("Successful execution")
     return response
 
 
