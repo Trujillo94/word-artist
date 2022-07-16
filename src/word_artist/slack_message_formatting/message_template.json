@@ -1,0 +1,55 @@
+{
+  "attachments": [
+    {
+      "color": "#160080",
+      "blocks": [
+        {
+          "type": "image",
+          "title": {
+            "type": "plain_text",
+            "text": "{text}",
+            "emoji": true
+          },
+          "image_url": "{img_url}",
+          "alt_text": "{text}"
+        },
+        {
+          "type": "actions",
+          "elements": [
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Send",
+                "emoji": true
+              },
+              "value": "{img_url}",
+              "action_id": "send",
+              "style": "primary"
+            },
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Change style",
+                "emoji": true
+              },
+              "value": "again",
+              "action_id": "again"
+            },
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Cancel",
+                "emoji": true
+              },
+              "value": "cancel",
+              "action_id": "cancel"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
