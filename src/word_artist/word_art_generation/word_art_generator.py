@@ -18,7 +18,7 @@ class WordArtGenerator:
 
     # Public:
     def __init__(self,
-                 strategy: WordArtGenerationStrategy = WordArtGenerationStrategy.MAKE_WORD_ART_DOWNLOAD):
+                 strategy: WordArtGenerationStrategy = WordArtGenerationStrategy.MOCK_WORD_ART):
         self.__strategy = strategy
 
     def compute(self, text: str, style: str | None = None) -> str:
@@ -76,5 +76,7 @@ class WordArtGenerator:
         match strategy:
             case WordArtGenerationStrategy.MAKE_WORD_ART_DOWNLOAD:
                 return self.__download_word_art_by_makeartword
+            case WordArtGenerationStrategy.MOCK_WORD_ART:
+                return lambda text, style: 'media/wordartist_scheme.png'
             case _:
                 raise ValueError(f'Unknown strategy: {strategy}')

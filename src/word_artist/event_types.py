@@ -8,14 +8,14 @@ class Event(Enum):
 
 
 def get_event_type(event: dict) -> Event:
-    if 'text' in event:
-        return Event.TEXT_COMMAND
-    elif 'type' in event:
+    if 'type' in event:
         match event['type']:
             case 'ASYNC_GENERATION':
                 return Event.ASYNC_GENERATION
             case _:
                 raise Exception(f'Invalid event. Event: <{event}>')
+    if 'text' in event:
+        return Event.TEXT_COMMAND
     elif 'payload' in event:
         return Event.BUTTON_ACTION
     else:

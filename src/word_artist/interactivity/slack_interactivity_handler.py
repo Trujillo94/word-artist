@@ -108,9 +108,8 @@ class SlackInteractivityHandler:
 
     def __reply_to_slack(self, body: Any) -> None:
         response_url = self.__response_url
-        if response_url:
-            response = requests.post(response_url, json=body)
-            logger.info(f'Slack response: {response}')
+        response = requests.post(response_url, json=body)
+        logger.info(f'Slack response: {response}')
 
     def __add_status_if_missing(self, body: dict) -> dict:
         if type(body) is dict:
