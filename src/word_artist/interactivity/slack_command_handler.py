@@ -88,8 +88,8 @@ class SlackCommandHandler:
             raise Exception(f'Invalid lambda name: <{LAMBDA_NAME}>')
 
     def __generate_image(self, text: str, style: str | None) -> None:
-        # img_filepath = WordArtGenerator().compute(text, style=style)
-        img_filepath = 'media/wordartist_scheme.png'
+        img_filepath = WordArtGenerator().compute(text, style=style)
+        # img_filepath = 'media/wordartist_scheme.png'
         style = 'hehe'
         self.__img_url = img_filepath
         self.__text = text
