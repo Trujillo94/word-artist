@@ -1,22 +1,19 @@
 import logging
 
-from src.word_artist.slack_word_artist import SlackWordArtist
+from src.slack_error_bot import SlackErrorBot
 
 logger = logging.getLogger("main")
 
 
 def handler(event: dict, context: dict) -> dict | None:
-    # print(event)
     logger.info(f'event: {event}')
     logger.info(f'context: {context}')
-    response = SlackWordArtist().run(event)
+    response = SlackErrorBot().run(event)
     logger.info("Successful execution")
     return response
 
 
 if __name__ == "__main__":
-    event = {
-        "text": "Hello World"
-    }
+    event = {}
     response = handler(event, {})
     print(response)
