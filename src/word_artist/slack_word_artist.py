@@ -6,7 +6,7 @@ from src.word_artist.interactivity.slack_command_handler import \
 from src.word_artist.interactivity.slack_interactivity_handler import \
     SlackInteractivityHandler
 
-logger = logging.getLogger("main")
+logger = logging.getLogger("src.word_artist")
 
 
 class SlackWordArtist:

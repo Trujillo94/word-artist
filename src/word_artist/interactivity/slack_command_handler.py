@@ -10,7 +10,8 @@ from src.word_artist.slack_message_formatting.slack_message_formatter import \
 from src.word_artist.word_art_generation.word_art_generator import \
     WordArtGenerator
 
-logger = logging.getLogger("main")
+logger = logging.getLogger(
+    "src.word_artist.interactivity.slack_command_handler")
 
 
 @dataclass

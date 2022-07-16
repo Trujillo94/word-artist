@@ -7,7 +7,8 @@ from src.word_artist.interactivity.slack_command_handler import \
     SlackCommandHandler
 from src.wrappers.slack.slack_wrapper import SlackWrapper
 
-logger = logging.getLogger("main")
+logger = logging.getLogger(
+    "src.word_artist.interactivity.slack_interactivity_handler")
 
 
 class SlackInteractivityHandler:
