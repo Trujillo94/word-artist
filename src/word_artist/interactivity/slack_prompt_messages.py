@@ -29,6 +29,21 @@ class SlackWordArtistUserMessages:
                     "type": "image",
                     "alt_text": self.error_text,
                     "image_url": self.error_img_url
+                },
+                {
+                    "type": "actions",
+                    "elements": [
+                            {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "Okay",
+                                    "emoji": True
+                                },
+                                "value": "cancel",
+                                "action_id": "cancel"
+                            }
+                    ]
                 }
             ],
             "status": "error",

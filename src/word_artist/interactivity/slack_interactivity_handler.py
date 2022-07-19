@@ -5,7 +5,8 @@ import requests
 from src.word_artist.interactivity.event_types import Event, get_event_type
 from src.word_artist.interactivity.slack_command_handler import \
     SlackCommandHandler
-from src.word_artist.interactivity.slack_prompt_messages import SlackWordArtistUserMessages
+from src.word_artist.interactivity.slack_prompt_messages import \
+    SlackWordArtistUserMessages
 from src.wrappers.slack.slack_wrapper import SlackWrapper
 
 logger = logging.getLogger(
