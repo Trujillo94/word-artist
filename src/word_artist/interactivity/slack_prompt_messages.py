@@ -48,7 +48,8 @@ class SlackWordArtistUserMessages:
             ],
             "status": "error",
         }
-        if load_env_var('ENV') == 'dev':
+        env = load_env_var('ENV')
+        if env is not None and env.lower() == 'dev':
             text = str(e)
             msg['blocks'].append({
                 "type": "section",

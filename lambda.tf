@@ -113,7 +113,8 @@ resource "aws_lambda_function" "lambda" {
   package_type  = "Image"
   environment {
     variables = {
-      AWS_BUCKET_NAME = var.AWS_BUCKET_NAME
+      AWS_BUCKET_NAME = var.AWS_BUCKET_NAME,
+      ENV             = "dev"
     }
   }
 }

@@ -9,7 +9,7 @@ from src.utils.logging_toolbox import log_warning
 logger = logging.getLogger("Toolbox")
 
 
-def load_env_var(key):
+def load_env_var(key: str) -> str | None:
     """
     Returns the value of the environment variable or None if not found.
 
