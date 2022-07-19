@@ -1,6 +1,6 @@
 import logging
 
-from src.word_artist.slack_word_artist import SlackWordArtist
+from src.word_artist.interactivity.slack_word_artist import SlackWordArtist
 
 logger = logging.getLogger("main")
 

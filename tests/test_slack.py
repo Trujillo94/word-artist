@@ -1,7 +1,7 @@
 import inspect
 import json
 
-from src.utils.toolbox import load_env_var, load_json_file
+from src.utils.toolbox import load_env_var
 from src.word_artist.slack_message_formatting.slack_message_formatter import \
     SlackMessageFormatter
 from src.wrappers.slack.slack_wrapper import SlackWrapper

@@ -104,4 +104,5 @@ if __name__ == "__main__":
     # test_text_command()
     # test_send_text_command_response()
     # test_send_button()
-    test_asynchronous_generation()
+    # test_asynchronous_generation()
+    test_error_reporting()

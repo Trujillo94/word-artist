@@ -2,9 +2,10 @@ import logging
 from typing import Any
 
 import requests
-from src.word_artist.event_types import Event, get_event_type
+from src.word_artist.interactivity.event_types import Event, get_event_type
 from src.word_artist.interactivity.slack_command_handler import \
     SlackCommandHandler
+from src.word_artist.interactivity.slack_prompt_messages import SlackWordArtistUserMessages
 from src.wrappers.slack.slack_wrapper import SlackWrapper
 
 logger = logging.getLogger(
@@ -108,7 +109,7 @@ class SlackInteractivityHandler:
 
     def __handle_interactivity_error(self, e: Exception) -> dict:
         logger.error(f'Error: {e}')
-        body = SlackCommandHandler().generate_error_message(e)
+        body = SlackWordArtistUserMessages().generate_error_message(e)
         return body
 
     def __reply_to_slack(self, body: Any) -> requests.Response:

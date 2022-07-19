@@ -1,6 +1,6 @@
 import logging
 
-from src.word_artist.event_types import Event, get_event_type
+from src.word_artist.interactivity.event_types import Event, get_event_type
 from src.word_artist.interactivity.slack_command_handler import \
     SlackCommandHandler
 from src.word_artist.interactivity.slack_interactivity_handler import \
