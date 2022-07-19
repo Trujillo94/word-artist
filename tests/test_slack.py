@@ -68,7 +68,7 @@ def test_send_blocks_message():
     function_name = inspect.currentframe().f_code.co_name
     text = f'Unit Testing: {function_name}'
     img_url = "https://media0.giphy.com/media/l0JMrPWRQkTeg3jjO/giphy.gif?cid=790b761118dcdd45484a085423b92468d1a9b8e2283561b6&rid=giphy.gif&ct=g"
-    blocks = SlackWrapper().get_image_blocks(img_url)
+    blocks = SlackWrapper().get_image_blocks(img_url, text=text)
     SlackWrapper().send_message(CHANNEL_ID, text=text, blocks=blocks)
 
 

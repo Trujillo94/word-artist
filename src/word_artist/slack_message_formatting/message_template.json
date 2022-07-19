@@ -23,7 +23,11 @@
                 "text": "Send",
                 "emoji": true
               },
-              "value": "{img_url}",
+              "value": {
+                "text": "{text}",
+                "img_url": "{img_url}",
+                "style": "{style}"
+              },
               "action_id": "send",
               "style": "primary"
             },
@@ -34,7 +38,11 @@
                 "text": "Change style",
                 "emoji": true
               },
-              "value": "again",
+              "value": {
+                "text": "{text}",
+                "img_url": "{img_url}",
+                "style": "{style}"
+              },
               "action_id": "again"
             },
             {

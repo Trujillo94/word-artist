@@ -24,8 +24,7 @@ class SlackInteractivityHandler:
                 case Event.ASYNC_GENERATION:
                     body = self.__compute_wordart_preview_message()
                 case Event.BUTTON_ACTION:
-                    action = self.__payload['actions'][0]
-                    body = self.__compute_buttons_reply_message(action)
+                    body = self.__compute_buttons_reply_message()
                 case _:
                     raise Exception(f'Invalid event. Event: <{event}>')
         except Exception as e:
@@ -60,21 +59,24 @@ class SlackInteractivityHandler:
     def __compute_wordart_preview_message(self) -> dict:
         payload = self.__payload
         text = payload['text']
-        style = payload.get('style', None)
+        style = payload.get('style')
         body = SlackCommandHandler().generate_command_message(text, style=style)
         body['replace_original'] = True
         # body['delete_original'] = True
         body['response_type'] = 'ephimeral'
         return body
 
-    def __compute_buttons_reply_message(self, action: dict) -> dict:
+    def __compute_buttons_reply_message(self) -> dict:
+        action = self.__payload['actions'][0]
         value = action.get('value')
         if value is None:
             raise Exception(
                 f'Invalid event: missing <value> field in <action> event field. Event: <{action}>')
         match action['action_id']:
             case 'send':
-                image_blocks = SlackWrapper().get_image_blocks(value)
+                img_url = value.get('img_url')
+                text = value.get('text')
+                image_blocks = SlackWrapper().get_image_blocks(img_url, text=text)
                 body = {
                     'text': 'Your WordArt has been sent!',
                     'blocks': str(image_blocks),
@@ -84,8 +86,14 @@ class SlackInteractivityHandler:
             case 'cancel':
                 body = {"delete_original": True}
             case 'again':
-                style = None
-                msg = SlackCommandHandler().generate_command_message(value, style=style)
+                style = value.get('style')
+                if style is not None:
+                    if 'used_styles' not in value:
+                        value['used_styles'] = []
+                    value['used_styles'].append(style)
+                    value['used_styles'] = list(set(value['used_styles']))
+                command_event = {**self.__event, **value}
+                msg = SlackCommandHandler().run(command_event)
                 body = {
                     "text": msg,
                     "replace_original": True,

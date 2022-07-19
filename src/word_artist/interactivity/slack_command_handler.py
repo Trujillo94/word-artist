@@ -34,7 +34,9 @@ class SlackCommandHandler:
             return self.generate_error_message(e)
 
     def generate_command_message(self, text: str, style: str | None = None) -> dict:
-        self.__generate_image(text, style=style)
+        self.__text = text
+        self.__style = style
+        self.__generate_image()
         slack_msg = self.__generate_slack_message()
         return slack_msg
 
@@ -87,20 +89,25 @@ class SlackCommandHandler:
         else:
             raise Exception(f'Invalid lambda name: <{LAMBDA_NAME}>')
 
-    def __generate_image(self, text: str, style: str | None) -> None:
-        img_filepath = WordArtGenerator().compute(text, style=style)
+    def __generate_image(self) -> None:
+        text = self.__text
+        style = self.__style
+        word_art_generator = WordArtGenerator()
+        img_filepath = word_art_generator.compute(text, style=style)
+        style = word_art_generator.style
         # img_filepath = 'media/wordartist_scheme.png'
-        style = 'hehe'
         self.__img_url = img_filepath
-        self.__text = text
+        self.__style = style
 
     def __generate_slack_message(self) -> dict:
         img_url = self.__img_url
         text = self.__text
+        style = self.__style
         template_filepath = self.message_template_filepath
         fields = {
             'img_url': img_url,
-            'text': text
+            'text': text,
+            'style': style
         }
         msg = SlackMessageFormatter(template_filepath).compute(fields)
         return msg

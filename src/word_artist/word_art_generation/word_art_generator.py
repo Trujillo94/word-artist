@@ -31,6 +31,10 @@ class WordArtGenerator:
         self.__upload_image()
         return self.__img_url
 
+    @property
+    def style(self) -> str | None:
+        return self.__style
+
     # Private:
     def __generate_image(self) -> None:
         text = self.__text
@@ -65,6 +69,7 @@ class WordArtGenerator:
         else:
             raise TypeError(
                 'Keyworded argument <style> cannot be of type <{type(style)}>. Valid types are <None> and <str>.')
+        self.__style = style
 
     def __get_random_style(self) -> str:
         styles = self.__styles
