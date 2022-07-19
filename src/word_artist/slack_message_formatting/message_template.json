@@ -44,7 +44,7 @@
                 "text": "Cancel",
                 "emoji": true
               },
-              "value": "cancel",
+              "value": "{event}",
               "action_id": "cancel"
             }
           ]

@@ -58,19 +58,29 @@ def test_send_button():
         raise Exception(f'Error: <{response}>')
 
 
+def test_cancel_button():
+    event = load_json_file("tests/data/cancel_payload.json")
+    event['payload']['container']['channel_id'] = load_env_var(
+        'SLACK_TESTING_CHANNEL_ID')
+    response = handler(event, {})
+    status = response.get('status')
+    if status != 'success':
+        raise Exception(f'Error: <{response}>')
+
+
 def test_asynchronous_generation():
     event = {
         'payload': {
             'text': 'Unit Testing: *test_text_command*',
             'style': None,
-                    'response_url': MOCK_RESPONSE_URL,
-                    'token': 'I2qr45qIMQ9Hce8swoGrUbCc',
-                    'team_id': 'T03HZL7AGSF',
-                    'team_domain': 'slackappsdeve-kb84670',
-                    'channel_id': 'C03HZLDDFPD',
-                    'channel_name': 'development-of-slack-apps',
-                    'user_id': 'U03HWRB6U5B',
-                    'user_name': 'trujillo.oriol'
+            'response_url': MOCK_RESPONSE_URL,
+            'token': 'I2qr45qIMQ9Hce8swoGrUbCc',
+            'team_id': 'T03HZL7AGSF',
+            'team_domain': 'slackappsdeve-kb84670',
+            'channel_id': 'C03HZLDDFPD',
+            'channel_name': 'development-of-slack-apps',
+            'user_id': 'U03HWRB6U5B',
+            'user_name': 'trujillo.oriol'
         },
         'type': 'ASYNC_GENERATION'
     }
@@ -106,6 +116,7 @@ def assert_slack_message_format(msg):
 if __name__ == "__main__":
     # test_text_command()
     # test_send_text_command_response()
-    test_send_button()
+    # test_send_button()
+    test_cancel_button()
     # test_asynchronous_generation()
     # test_error_reporting()
