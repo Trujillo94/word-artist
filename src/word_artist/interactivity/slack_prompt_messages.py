@@ -37,7 +37,7 @@ class SlackWordArtistUserMessages:
                                 "type": "button",
                                 "text": {
                                     "type": "plain_text",
-                                    "text": "Okay",
+                                    "text": "Close",
                                     "emoji": True
                                 },
                                 "value": "cancel",
