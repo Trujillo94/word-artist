@@ -4,9 +4,10 @@ from dataclasses import dataclass
 from src.config.aws import LAMBDA_NAME
 from src.utils.aws_cli_toolbox import (check_async_lambda_response,
                                        invoke_lambda)
+from src.word_artist.interactivity.slack_prompt_messages import \
+    SlackWordArtistUserMessages
 from src.word_artist.slack_message_formatting.slack_message_formatter import \
     SlackMessageFormatter
-from src.word_artist.interactivity.slack_prompt_messages import SlackWordArtistUserMessages
 from src.word_artist.word_art_generation.word_art_generator import \
     WordArtGenerator
 
@@ -64,11 +65,17 @@ class SlackCommandHandler:
         img_url = self.__img_url
         text = self.__text
         style = self.__style
+        event_str = str({
+            'text': text,
+            'style': style,
+            'img_url': img_url
+        }).replace('"', "'")
         template_filepath = self.message_template_filepath
         fields = {
             'img_url': img_url,
             'text': text,
-            'style': style
+            'style': style,
+            'event': event_str
         }
         msg = SlackMessageFormatter(template_filepath).compute(fields)
         return msg

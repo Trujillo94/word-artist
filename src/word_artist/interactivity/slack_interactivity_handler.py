@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import Any
 
@@ -72,9 +73,11 @@ class SlackInteractivityHandler:
     def __compute_buttons_reply_message(self) -> dict:
         action = self.__payload['actions'][0]
         value = action.get('value')
-        if value is None:
+        if not isinstance(value, str):
             raise Exception(
-                f'Invalid event: missing <value> field in <action> event field. Event: <{action}>')
+                f'Invalid event: missing or invalid <value> field in <action> event field. Event: <{action}>')
+        value = value.replace("'", '"')
+        value = json.loads(value)
         match action['action_id']:
             case 'send':
                 img_url = value.get('img_url')

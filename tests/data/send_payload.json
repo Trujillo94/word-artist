@@ -41,7 +41,7 @@
           "text": "Send",
           "emoji": true
         },
-        "value": "https://s3-eu-west-3.amazonaws.com/word-artist-prod/dewdew-hehe.png",
+        "value": "{'text': 'Unit Testing: *test_text_command*', 'style': 'green-marble', 'img_url': 'https://s3-eu-west-3.amazonaws.com/word-artist-prod/unit-testing:-*test-text-command*-green-marble.png'}",
         "type": "button",
         "action_ts": "1656515273.795950"
       }
