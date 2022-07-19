@@ -108,11 +108,7 @@ class SlackInteractivityHandler:
 
     def __handle_interactivity_error(self, e: Exception) -> dict:
         logger.error(f'Error: {e}')
-        body = {
-            'text': f'Error: {e}',
-            'blocks': str(SlackWrapper().get_image_blocks('error')),
-            "status": "error",
-        }
+        body = SlackCommandHandler().generate_error_message(e)
         return body
 
     def __reply_to_slack(self, body: Any) -> requests.Response:
