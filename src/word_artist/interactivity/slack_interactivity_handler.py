@@ -118,7 +118,7 @@ class SlackInteractivityHandler:
     def __reply_to_slack(self, body: Any) -> requests.Response:
         response_url = self.__response_url
         response = requests.post(response_url, json=body)
-        print(f'Slack response: {response}')
+        # print(f'Slack response: {response.text}')
         return response
 
     def __add_status_success(self, body: dict) -> dict:
@@ -130,4 +130,4 @@ class SlackInteractivityHandler:
     def __check_response(self, response: requests.Response) -> None:
         if not str(response.status_code).startswith('2'):
             raise Exception(
-                f'Error: {response.status_code}. Response: {response}')
+                f'Error: {response.status_code}. Details: {response.text}')
