@@ -27,14 +27,15 @@ class SlackInteractivityHandler:
                     body = self.__compute_buttons_reply_message()
                 case _:
                     raise Exception(f'Invalid event. Event: <{event}>')
+            if type(body) is not dict:
+                raise Exception(f'Error: body is not a dict. Event: <{body}>')
+            body = self.__add_status_success(body)
+            slack_response = self.__reply_to_slack(body)
+            self.__check_response(slack_response)
         except Exception as e:
             body = self.__handle_interactivity_error(e)
-        finally:
-            if type(body) is not dict:
-                e = Exception(f'Error: body is not a dict. Event: <{body}>')
-                body = self.__handle_interactivity_error(e)
-            body = self.__add_status_if_missing(body)
-            self.__reply_to_slack(body)
+            slack_response = self.__reply_to_slack(body)
+
         print(f'Response body: {body}')
         return body
 
@@ -114,14 +115,19 @@ class SlackInteractivityHandler:
         }
         return body
 
-    def __reply_to_slack(self, body: Any) -> None:
+    def __reply_to_slack(self, body: Any) -> requests.Response:
         response_url = self.__response_url
         response = requests.post(response_url, json=body)
-        # check_response(response)
         print(f'Slack response: {response}')
+        return response
 
-    def __add_status_if_missing(self, body: dict) -> dict:
+    def __add_status_success(self, body: dict) -> dict:
         if type(body) is dict:
             if 'status' not in body:
                 body['status'] = 'success'
         return body
+
+    def __check_response(self, response: requests.Response) -> None:
+        if not str(response.status_code).startswith('2'):
+            raise Exception(
+                f'Error: {response.status_code}. Response: {response}')
